@@ -86,6 +86,8 @@
             this.toolStripSeparator9 = new System.Windows.Forms.ToolStripSeparator();
             this.bohemiaInteractiveWikiToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator10 = new System.Windows.Forms.ToolStripSeparator();
+            this.logStackTraceToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripSeparator14 = new System.Windows.Forms.ToolStripSeparator();
             this.aboutToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.mainSplitContainer = new System.Windows.Forms.SplitContainer();
             this.mainTabControl = new System.Windows.Forms.TabControl();
@@ -103,6 +105,7 @@
             this.toolStripSeparator13 = new System.Windows.Forms.ToolStripSeparator();
             this.closeAllButThisTabBarContextMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.loadUserVarsBw = new System.ComponentModel.BackgroundWorker();
+            this.sendFeedbackToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.mainToolStrip.SuspendLayout();
             this.mainMenuStrip.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.mainSplitContainer)).BeginInit();
@@ -180,6 +183,7 @@
             // saveAllToolStripButton
             // 
             this.saveAllToolStripButton.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.saveAllToolStripButton.Enabled = false;
             this.saveAllToolStripButton.Image = ((System.Drawing.Image)(resources.GetObject("saveAllToolStripButton.Image")));
             this.saveAllToolStripButton.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.saveAllToolStripButton.Name = "saveAllToolStripButton";
@@ -361,6 +365,7 @@
             // 
             // saveAllToolStripMenuItem
             // 
+            this.saveAllToolStripMenuItem.Enabled = false;
             this.saveAllToolStripMenuItem.Image = ((System.Drawing.Image)(resources.GetObject("saveAllToolStripMenuItem.Image")));
             this.saveAllToolStripMenuItem.Name = "saveAllToolStripMenuItem";
             this.saveAllToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)(((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.Shift) 
@@ -452,6 +457,7 @@
             this.settingsToolStripMenuItem.Name = "settingsToolStripMenuItem";
             this.settingsToolStripMenuItem.Size = new System.Drawing.Size(218, 22);
             this.settingsToolStripMenuItem.Text = "Settings";
+            this.settingsToolStripMenuItem.Click += new System.EventHandler(this.settingsToolStripMenuItem_Click);
             // 
             // rebuildArmaSenseCacheToolStripMenuItem
             // 
@@ -559,6 +565,9 @@
             this.toolStripSeparator9,
             this.bohemiaInteractiveWikiToolStripMenuItem,
             this.toolStripSeparator10,
+            this.logStackTraceToolStripMenuItem,
+            this.sendFeedbackToolStripMenuItem,
+            this.toolStripSeparator14,
             this.aboutToolStripMenuItem});
             this.helpToolStripMenuItem.Name = "helpToolStripMenuItem";
             this.helpToolStripMenuItem.Size = new System.Drawing.Size(44, 20);
@@ -573,6 +582,7 @@
             // 
             // dashWebsiteToolStripMenuItem
             // 
+            this.dashWebsiteToolStripMenuItem.Enabled = false;
             this.dashWebsiteToolStripMenuItem.Name = "dashWebsiteToolStripMenuItem";
             this.dashWebsiteToolStripMenuItem.Size = new System.Drawing.Size(186, 22);
             this.dashWebsiteToolStripMenuItem.Text = "Dash Website";
@@ -580,6 +590,7 @@
             // 
             // dashDocumentationToolStripMenuItem
             // 
+            this.dashDocumentationToolStripMenuItem.Enabled = false;
             this.dashDocumentationToolStripMenuItem.Image = ((System.Drawing.Image)(resources.GetObject("dashDocumentationToolStripMenuItem.Image")));
             this.dashDocumentationToolStripMenuItem.Name = "dashDocumentationToolStripMenuItem";
             this.dashDocumentationToolStripMenuItem.Size = new System.Drawing.Size(186, 22);
@@ -602,6 +613,19 @@
             // 
             this.toolStripSeparator10.Name = "toolStripSeparator10";
             this.toolStripSeparator10.Size = new System.Drawing.Size(183, 6);
+            // 
+            // logStackTraceToolStripMenuItem
+            // 
+            this.logStackTraceToolStripMenuItem.Image = ((System.Drawing.Image)(resources.GetObject("logStackTraceToolStripMenuItem.Image")));
+            this.logStackTraceToolStripMenuItem.Name = "logStackTraceToolStripMenuItem";
+            this.logStackTraceToolStripMenuItem.Size = new System.Drawing.Size(186, 22);
+            this.logStackTraceToolStripMenuItem.Text = "Report Bug";
+            this.logStackTraceToolStripMenuItem.Click += new System.EventHandler(this.logStackTraceToolStripMenuItem_Click);
+            // 
+            // toolStripSeparator14
+            // 
+            this.toolStripSeparator14.Name = "toolStripSeparator14";
+            this.toolStripSeparator14.Size = new System.Drawing.Size(183, 6);
             // 
             // aboutToolStripMenuItem
             // 
@@ -677,6 +701,7 @@
             this.textArea.Cursor = System.Windows.Forms.Cursors.IBeam;
             this.textArea.DisabledColor = System.Drawing.Color.FromArgb(((int)(((byte)(100)))), ((int)(((byte)(180)))), ((int)(((byte)(180)))), ((int)(((byte)(180)))));
             this.textArea.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.textArea.Font = new System.Drawing.Font("Courier New", 9.75F);
             this.textArea.Hotkeys = resources.GetString("textArea.Hotkeys");
             this.textArea.IsReplaceMode = false;
             this.textArea.LeftPadding = 15;
@@ -787,6 +812,7 @@
             // 
             // closeAllButThisTabBarContextMenuItem
             // 
+            this.closeAllButThisTabBarContextMenuItem.Enabled = false;
             this.closeAllButThisTabBarContextMenuItem.Name = "closeAllButThisTabBarContextMenuItem";
             this.closeAllButThisTabBarContextMenuItem.Size = new System.Drawing.Size(171, 22);
             this.closeAllButThisTabBarContextMenuItem.Text = "Close All But This";
@@ -798,6 +824,13 @@
             this.loadUserVarsBw.WorkerSupportsCancellation = true;
             this.loadUserVarsBw.DoWork += new System.ComponentModel.DoWorkEventHandler(this.loadUserVarsBw_DoWork);
             this.loadUserVarsBw.RunWorkerCompleted += new System.ComponentModel.RunWorkerCompletedEventHandler(this.loadUserVarsBw_RunWorkerCompleted);
+            // 
+            // sendFeedbackToolStripMenuItem
+            // 
+            this.sendFeedbackToolStripMenuItem.Image = ((System.Drawing.Image)(resources.GetObject("sendFeedbackToolStripMenuItem.Image")));
+            this.sendFeedbackToolStripMenuItem.Name = "sendFeedbackToolStripMenuItem";
+            this.sendFeedbackToolStripMenuItem.Size = new System.Drawing.Size(186, 22);
+            this.sendFeedbackToolStripMenuItem.Text = "Send Feedback";
             // 
             // Main
             // 
@@ -908,6 +941,9 @@
         private FastColoredTextBoxNS.FastColoredTextBox textArea;
         private System.ComponentModel.BackgroundWorker loadUserVarsBw;
         private System.Windows.Forms.ToolStripMenuItem rebuildArmaSenseCacheToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem logStackTraceToolStripMenuItem;
+        private System.Windows.Forms.ToolStripSeparator toolStripSeparator14;
+        private System.Windows.Forms.ToolStripMenuItem sendFeedbackToolStripMenuItem;
     }
 }
 

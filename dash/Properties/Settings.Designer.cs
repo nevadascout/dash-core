@@ -153,5 +153,101 @@ namespace Dash.Properties {
                 this["SelectedTab"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("True")]
+        public bool EnableArmaSense {
+            get {
+                return ((bool)(this["EnableArmaSense"]));
+            }
+            set {
+                this["EnableArmaSense"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("True")]
+        public bool EnableSyntaxErrorHighlighting {
+            get {
+                return ((bool)(this["EnableSyntaxErrorHighlighting"]));
+            }
+            set {
+                this["EnableSyntaxErrorHighlighting"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("True")]
+        public bool EnableAutoCompletion {
+            get {
+                return ((bool)(this["EnableAutoCompletion"]));
+            }
+            set {
+                this["EnableAutoCompletion"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool EnableFileHeaderComment {
+            get {
+                return ((bool)(this["EnableFileHeaderComment"]));
+            }
+            set {
+                this["EnableFileHeaderComment"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("// <project name> {filename}\r\n// Copyright (c) {year} <website>")]
+        public string FileHeaderCommentText {
+            get {
+                return ((string)(this["FileHeaderCommentText"]));
+            }
+            set {
+                this["FileHeaderCommentText"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool EnableCustomSyntaxTheme {
+            get {
+                return ((bool)(this["EnableCustomSyntaxTheme"]));
+            }
+            set {
+                this["EnableCustomSyntaxTheme"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool EnableCustomDashTheme {
+            get {
+                return ((bool)(this["EnableCustomDashTheme"]));
+            }
+            set {
+                this["EnableCustomDashTheme"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("True")]
+        public bool EnableAutoIndentation {
+            get {
+                return ((bool)(this["EnableAutoIndentation"]));
+            }
+            set {
+                this["EnableAutoIndentation"] = value;
+            }
+        }
     }
 }

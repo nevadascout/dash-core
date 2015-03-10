@@ -33,9 +33,6 @@ namespace Dash
 
 
 
-        
-
-
         public Main()
         {
             this.EditorHelper = new EditorHelper(textArea_TextChanged, textArea_TextChangedDelayed, textArea_KeyUp, textArea_SelectionChangedDelayed, textArea_DragDrop, textArea_DragEnter, mainTabControl, ArmaSense);
@@ -98,6 +95,7 @@ namespace Dash
                             {
                                 TabsHelper.CreateTabOpenFile(file);
                                 EditorHelper.GetActiveEditor().Text = File.ReadAllText(file);
+                                TabsHelper.SetSelectedTabClean();
 
                                 EditorHelper.PerformSyntaxHighlighting(null, FilesHelper.GetLangFromFile(file), true);
                             }
@@ -136,6 +134,7 @@ namespace Dash
                 {
                     TabsHelper.CreateBlankTab(FileType.Other, "tutorial.txt");
                     EditorHelper.GetActiveEditor().Text = File.ReadAllText(tutorialFile);
+                    TabsHelper.SetSelectedTabClean();
                 }
             }
 
@@ -160,123 +159,15 @@ namespace Dash
             mainSplitContainer.SplitterDistance = Convert.ToInt32(Settings.Default.SplitterWidth);
 
             EditorHelper.ActiveEditor.GoHome();
+
+            Logger.Log("testMessage");
         }
 
-        private void FileSystemChanged(object source, FileSystemEventArgs e)
+        private void Main_FormClosing(object sender, FormClosingEventArgs e)
         {
-            FilesHelper.SetTreeviewDirectory(directoryTreeView, Settings.Default.TreeviewDir);
-        }
-
-        public void InitStylesPriority()
-        {
-            textArea.AddStyle(SameWordsStyle);
-        }
-
-        public void textArea_TextChanged(object sender, TextChangedEventArgs e)
-        {
-            // Break out if the form isn't loaded
-            if (!allowSyntaxHighlighting) return;
-
-            // Set markers for folding
-            e.ChangedRange.ClearFoldingMarkers();
-
-            e.ChangedRange.SetFoldingMarkers("{", "}");
-
-            e.ChangedRange.SetFoldingMarkers(@"//region\b", @"//endregion\b");
-            e.ChangedRange.SetFoldingMarkers(@"// region\b", @"// endregion\b");
-            e.ChangedRange.SetFoldingMarkers(@"//#region\b", @"//#endregion\b");
-            e.ChangedRange.SetFoldingMarkers(@"// #region\b", @"// #endregion\b");
-
-            EditorHelper.PerformSyntaxHighlighting(e, Lang);
-            
-        }
-
-        private void dashWebsiteToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            Process.Start("http://nevadascout.com/dash/");
-        }
-
-        private void dashDocumentationToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            Process.Start("http://nevadascout.com/dash/docs/");
-        }
-
-        private void openFolderToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            DialogResult result = openFolderDialog.ShowDialog();
-
-            if (result == DialogResult.OK)
-            {
-                FilesHelper.SetTreeviewDirectory(directoryTreeView, openFolderDialog.SelectedPath);
-            }
-
-            Settings.Default.TreeviewDir = openFolderDialog.SelectedPath;
-            Settings.Default.Save();
-        }
-
-        private void directoryTreeView_NodeMouseDoubleClick(object sender, TreeNodeMouseClickEventArgs e)
-        {
-            // If not a folder, load into the editor
-            if (e.Node.ImageIndex != 0 && e.Node.ImageIndex != 4)
-            {
-                var filename = e.Node.Tag.ToString();
-
-                bool tabOpen = mainTabControl.TabPages.Cast<TabPage>().Any(tagPage => tagPage.Name == filename);
-
-                // Don't create new tab if the file is already open
-                if (tabOpen)
-                {
-                    TabPage tab = TabsHelper.GetTabByFilename(mainTabControl, filename);
-                    mainTabControl.SelectTab(tab);
-
-                    return;
-                }
-
-                if (mainTabControl.SelectedTab != null && (mainTabControl.SelectedTab.Text == "New File" && EditorHelper.GetActiveEditor().Text == string.Empty))
-                {
-                    // Close the current tab
-                    mainTabControl.TabPages.Remove(mainTabControl.SelectedTab);
-                }
-
-                if (!File.Exists(filename))
-                {
-                    MessageBox.Show(string.Format("Unable to open file:\n\n'{0}'\n\nFile does not exist!", filename));
-                }
-                else
-                {
-                    TabsHelper.CreateTabOpenFile(filename);
-                    EditorHelper.ActiveEditor.Text = File.ReadAllText(filename);
-
-                    //// Create new tab for file contents
-                    //mainTabControl.TabPages.Add(new TabPage(e.Node.Text) { Name = filename });
-                    //mainTabControl.SuspendLayout();
-
-                    //// Add editor
-                    //mainTabControl.TabPages[filename].Controls.Add(EditorHelper.CreateEditor(filename));
-                    //mainTabControl.ResumeLayout();
-
-                    //mainTabControl.SelectTab(filename);
-
-                    //EditorHelper.GetActiveEditor().Text = File.ReadAllText(filename);
-                    //EditorHelper.ActiveEditor.Focus();
-                }
-            }
-        }
-
-        private void closeToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            TabsHelper.CloseTab(mainTabControl.SelectedTab);
             SettingsHelper.UpdateOpenTabs();
-
-        }
-
-        private void mainSplitContainer_SplitterMoved(object sender, SplitterEventArgs e)
-        {
-            if (formLoaded)
-            {
-                Settings.Default.SplitterWidth = mainSplitContainer.SplitterDistance;
-                Settings.Default.Save();
-            }
+            Settings.Default.SelectedTab = mainTabControl.SelectedIndex;
+            Settings.Default.Save();
         }
 
         private void Main_Resize(object sender, EventArgs e)
@@ -297,21 +188,64 @@ namespace Dash
             Settings.Default.Save();
         }
 
-        private void newSqfFileToolStripMenuItem_Click(object sender, EventArgs e)
+        public void InitStylesPriority()
         {
-            TabsHelper.CreateBlankTab();
+            textArea.AddStyle(SameWordsStyle);
         }
 
-        private void newCppFileToolStripMenuItem_Click(object sender, EventArgs e)
+        private void FileSystemChanged(object source, FileSystemEventArgs e)
         {
-            TabsHelper.CreateBlankTab(FileType.Cpp);
+            FilesHelper.SetTreeviewDirectory(directoryTreeView, Settings.Default.TreeviewDir);
         }
 
-        private void newSqfFileToolStripButton_Click(object sender, EventArgs e)
+
+        private void mainSplitContainer_SplitterMoved(object sender, SplitterEventArgs e)
         {
-            newSqfFileToolStripMenuItem.PerformClick();
+            if (formLoaded)
+            {
+                Settings.Default.SplitterWidth = mainSplitContainer.SplitterDistance;
+                Settings.Default.Save();
+            }
         }
-        
+
+        private void directoryTreeView_NodeMouseDoubleClick(object sender, TreeNodeMouseClickEventArgs e)
+        {
+            // If not a folder, load into the editor
+            if (e.Node.ImageIndex != 0 && e.Node.ImageIndex != 4)
+            {
+                var filename = e.Node.Tag.ToString();
+
+                bool tabOpen = mainTabControl.TabPages.Cast<TabPage>().Any(tagPage => tagPage.Name == filename);
+
+                // Don't create new tab if the file is already open
+                if (tabOpen)
+                {
+                    TabPage tab = TabsHelper.GetTabByFilename(mainTabControl, filename);
+                    mainTabControl.SelectTab(tab);
+
+                    return;
+                }
+
+                if (!File.Exists(filename))
+                {
+                    MessageBox.Show(string.Format("Unable to open file:\n\n'{0}'\n\nFile does not exist!", filename));
+                }
+                else
+                {
+                    if (mainTabControl.SelectedTab != null && (mainTabControl.SelectedTab.Text == "New File" && EditorHelper.GetActiveEditor().Text == string.Empty))
+                    {
+                        // Close the current tab
+                        mainTabControl.TabPages.Remove(mainTabControl.SelectedTab);
+                    }
+
+                    TabsHelper.CreateTabOpenFile(filename);
+                    Lang = FilesHelper.GetLangFromFile(filename);
+                    EditorHelper.ActiveEditor.Text = File.ReadAllText(filename);
+                    TabsHelper.SetSelectedTabClean();
+                }
+            }
+        }
+
         private void mainTabControl_SelectedIndexChanged(object sender, EventArgs closee)
         {
             TabControl tabControl = (TabControl)sender;
@@ -337,164 +271,116 @@ namespace Dash
             // Break if the form isn't loaded
             if (!formLoaded) return;
             
-            SettingsHelper.UpdateOpenTabs();
-
             // TODO - Optimise this
             EditorHelper.UserVariablesCurrentFile = new List<UserVariable>();
 
+            SettingsHelper.UpdateOpenTabs();
             Settings.Default.Save();
         }
 
-        private void saveToolStripMenuItem_Click(object sender, EventArgs e)
+
+        #region Background Worker for building file userVars / rebuilding ArmaSense on update
+        private void loadUserVarsBw_DoWork(object sender, DoWorkEventArgs e)
         {
-            var editor = EditorHelper.GetActiveEditor();
+            WorkerObject workerObject = e.Argument as WorkerObject;
 
-            var filePath = editor.Tag.ToString();
-            var contents = editor.Text;
+            // Build user variables in current file
 
-            if (filePath == String.Empty)
+            if (workerObject != null)
             {
-                SaveFileDialog sfd = new SaveFileDialog
-                {
-                    Filter = "SQF File|*.sqf|C++ File|*.cpp|SQM File|*.sqm|All Files|*.*"
-                };
+                var lines = workerObject.Editor.Lines;
+                workerObject.UserVariables.Clear();
 
-                if (sfd.ShowDialog() == DialogResult.OK)
+                foreach (var line in lines)
                 {
-                    File.WriteAllText(sfd.FileName, EditorHelper.GetActiveEditor().Text);
+                    // Loop through each occurange of string to left of "=" -> won't work if multiple variables are declared on one line
+                    var parts = line.Split('=');
+                    if (parts.Length > 1)
+                    {
+                        var variable = parts[0].Trim();
+                        var tooltipParts = parts[1].Split(';');
+                        var tooltip = tooltipParts[0].Trim();
+
+                        var varType = EditorHelper.GetVarTypeFromString(tooltip);
+
+                        workerObject.UserVariables.Add(new UserVariable { VarName = variable, TooltipTitle = varType, TooltipText = tooltip });
+                    }
+
+                    // Attempt using regex -> regex times out if lines are longer than 20 chars
+                    //foreach (Match m in Regex.Matches(cleanLine, "(\\w+.)+="))
+                    //{
+                    //    var parts = m.Value.Split('=');
+                    //    var variable = parts[0].Trim();
+                    //    workerObject.UserVariables.Add(variable);
+                    //}
                 }
-            }
-            else
-            {
-                File.WriteAllText(filePath, contents);
+
+                e.Result = workerObject;
             }
         }
 
-        private void openFileToolStripMenuItem_Click(object sender, EventArgs e)
+        private void loadUserVarsBw_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
         {
-            DialogResult openFile = openFileDialog.ShowDialog();
-
-            if (openFile == DialogResult.OK)
+            var result = e.Result as WorkerObject;
+            
+            try
             {
-                foreach (var file in openFileDialog.FileNames)
-                {
-                    TabsHelper.CreateTabOpenFile(file);
-                    EditorHelper.GetActiveEditor().Text = File.ReadAllText(file);
-                }
+                if (result == null) return;
+
+                EditorHelper.UserVariablesCurrentFile = result.UserVariables;
+
+                EditorHelper.BuildAutocompleteMenu(ArmaSense, result.ForceUpdate);
+            }
+            catch (Exception ex)
+            {
+                //MessageBox.Show(ex.Message);
+                Logger.Log(ex.Message);
             }
         }
+        #endregion
 
-        private void saveAsToolStripMenuItem_Click(object sender, EventArgs e)
+        
+        #region TextArea (Editor) Event Handlers
+
+        public void textArea_TextChanged(object sender, TextChangedEventArgs e)
         {
-            SaveFileDialog sfd = new SaveFileDialog
+            // Break out if the form isn't loaded
+            if (!allowSyntaxHighlighting) return;
+
+            // Set markers for folding
+            e.ChangedRange.ClearFoldingMarkers();
+
+            e.ChangedRange.SetFoldingMarkers("{", "}");
+
+            e.ChangedRange.SetFoldingMarkers(@"//region\b", @"//endregion\b");
+            e.ChangedRange.SetFoldingMarkers(@"// region\b", @"// endregion\b");
+            e.ChangedRange.SetFoldingMarkers(@"//#region\b", @"//#endregion\b");
+            e.ChangedRange.SetFoldingMarkers(@"// #region\b", @"// #endregion\b");
+
+            EditorHelper.PerformSyntaxHighlighting(e, Lang);
+
+            // Todo - switch this out for a check against the file CRC hash
+            //TabsHelper.CheckTabDirtyState();
+
+            // Make file dirty
+            FileInfo tag = mainTabControl.SelectedTab.Tag as FileInfo;
+            if (tag != null) tag.Dirty = true;
+            mainTabControl.SelectedTab.Tag = tag;
+
+        }
+
+        private void textArea_TextChangedDelayed(object sender, TextChangedEventArgs e)
+        {
+            WorkerObject worker = new WorkerObject
             {
-                Filter = "SQF File|*.sqf|C++ File|*.cpp|SQM File|*.sqm|All Files|*.*"
+                Editor = EditorHelper.ActiveEditor,
+                UserVariables = new List<UserVariable>()
             };
 
-            if (sfd.ShowDialog() == DialogResult.OK)
+            if (!loadUserVarsBw.IsBusy)
             {
-                File.WriteAllText(sfd.FileName, EditorHelper.GetActiveEditor().Text);
-
-                // Close current tab
-                TabsHelper.CloseTab(mainTabControl.SelectedTab);
-
-                // Reopen from file
-                TabsHelper.CreateTabOpenFile(sfd.FileName);
-                EditorHelper.GetActiveEditor().Text = File.ReadAllText(sfd.FileName);
+                loadUserVarsBw.RunWorkerAsync(worker);
             }
-        }
-
-        private void commentToolStripButton_Click(object sender, EventArgs e)
-        {
-            EditorHelper.GetActiveEditor().CommentSelected();
-        }
-
-        private void commentCurrentLineToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            EditorHelper.GetActiveEditor().CommentSelected();
-        }
-
-        private void openFileStripButton_Click(object sender, EventArgs e)
-        {
-            openFileToolStripMenuItem.PerformClick();
-        }
-
-        private void saveAllToolStripButton_Click(object sender, EventArgs e)
-        {
-            foreach (TabPage tabPage in mainTabControl.TabPages)
-            {
-                var editor = tabPage.Controls[0];
-
-                var filePath = editor.Tag.ToString();
-                var contents = editor.Text;
-
-                if (filePath == String.Empty)
-                {
-                    SaveFileDialog sfd = new SaveFileDialog
-                    {
-                        Filter = "SQF File|*.sqf|C++ File|*.cpp|SQM File|*.sqm|All Files|*.*"
-                    };
-
-                    if (sfd.ShowDialog() == DialogResult.OK)
-                    {
-                        File.WriteAllText(sfd.FileName, EditorHelper.GetActiveEditor().Text);
-                        
-                        // Close current tab
-                        TabsHelper.CloseTab(tabPage);
-
-                        // Reopen from file
-                        TabsHelper.CreateTabOpenFile(sfd.FileName);
-                        EditorHelper.GetActiveEditor().Text = File.ReadAllText(sfd.FileName);
-                    }
-                }
-                else
-                {
-                    File.WriteAllText(filePath, contents);
-                }
-            }
-        }
-
-        private void saveToolStripButton_Click(object sender, EventArgs e)
-        {
-            var editor = EditorHelper.GetActiveEditor();
-
-            var filePath = editor.Tag.ToString();
-            var contents = editor.Text;
-
-            if (filePath == String.Empty)
-            {
-                SaveFileDialog sfd = new SaveFileDialog
-                {
-                    Filter = "SQF File|*.sqf|C++ File|*.cpp|SQM File|*.sqm|All Files|*.*"
-                };
-
-                if (sfd.ShowDialog() == DialogResult.OK)
-                {
-                    File.WriteAllText(sfd.FileName, EditorHelper.GetActiveEditor().Text);
-
-                    // Close current tab
-                    TabsHelper.CloseTab(mainTabControl.SelectedTab);
-
-                    // Reopen from file
-                    TabsHelper.CreateTabOpenFile(sfd.FileName);
-                    EditorHelper.GetActiveEditor().Text = File.ReadAllText(sfd.FileName);
-                }
-            }
-            else
-            {
-                File.WriteAllText(filePath, contents);
-            }
-        }
-
-        private void lookupDefinitionToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            var editor = EditorHelper.GetActiveEditor();
-
-            var fragment = editor.Selection.GetFragment(@"\w");
-
-            var lookupWord = fragment.Text;
-
-            Process.Start("https://community.bistudio.com/wiki?search=" + lookupWord);
         }
 
         public void textArea_SelectionChangedDelayed(object sender, EventArgs e)
@@ -504,7 +390,7 @@ namespace Dash
             editor.Range.ClearStyle(SameWordsStyle);
             //editor.Bookmarks.Clear();
 
-            
+
             if (editor.Selection.IsEmpty)
             {
                 // Highlight word matches
@@ -562,83 +448,25 @@ namespace Dash
                     }
                 }
             }
-
         }
 
-        private void bohemiaInteractiveWikiToolStripMenuItem_Click(object sender, EventArgs e)
+        private void textArea_KeyUp(object sender, KeyEventArgs e)
         {
-            Process.Start("https://community.bistudio.com/wiki/Category:Scripting_Commands");
-        }
-
-        private void openFolderToolStripButton_Click(object sender, EventArgs e)
-        {
-            openFolderToolStripMenuItem.PerformClick();
-        }
-
-        private void showQuickHelpToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            var tutorialFile = AppDomain.CurrentDomain.BaseDirectory + "\\tutorial.txt";
-            if (File.Exists(tutorialFile))
+            if (e.KeyCode == Keys.OemSemicolon)
             {
-                TabsHelper.CreateBlankTab(FileType.Other, "tutorial.txt");
-                EditorHelper.GetActiveEditor().Text = File.ReadAllText(tutorialFile);
+                WorkerObject worker = new WorkerObject
+                {
+                    Editor = EditorHelper.ActiveEditor,
+                    UserVariables = new List<UserVariable>(),
+                    ForceUpdate = true
+                };
+
+                if (!loadUserVarsBw.IsBusy)
+                {
+                    loadUserVarsBw.RunWorkerAsync(worker);
+                }
+                //EditorHelper.BuildAutocompleteMenu(ArmaSense, true);
             }
-            else
-            {
-                MessageBox.Show("Unable to find tutorial.txt in the Dash install directory\n\nPlease go to the Dash website to view the documentation there instead.");
-            }
-        }
-
-        private void closeTabToolStripButton_Click(object sender, EventArgs e)
-        {
-            closeToolStripMenuItem.PerformClick();
-        }
-
-        private void btnRefreshFileBrowser_Click(object sender, EventArgs e)
-        {
-            FilesHelper.SetTreeviewDirectory(directoryTreeView, Settings.Default.TreeviewDir);
-        }
-
-        private void Main_FormClosing(object sender, FormClosingEventArgs e)
-        {
-            Settings.Default.SelectedTab = mainTabControl.SelectedIndex;
-            Settings.Default.Save();
-        }
-
-
-        private void mainTabControl_MouseUp(object sender, MouseEventArgs e)
-        {
-            if (e.Button == MouseButtons.Middle)
-            {
-                TabsHelper.CloseTab(TabsHelper.GetClickedTab(e));
-                SettingsHelper.UpdateOpenTabs();
-            }
-
-            if (e.Button == MouseButtons.Right)
-            {
-                var clickedTab = TabsHelper.GetClickedTab(e);
-                var pos = new Point((e.Location.X - 4), (e.Location.Y - 24));
-                mainTabControl.SelectTab(clickedTab);
-                tabBarContextMenu.Show(clickedTab, pos);
-            }
-        }
-
-        private void saveTabBarContextStripItem_Click(object sender, EventArgs e)
-        {
-            saveToolStripMenuItem.PerformClick();
-        }
-
-        private void closeTabBarContextMenuItem_Click(object sender, EventArgs e)
-        {
-            TabsHelper.CloseTab(mainTabControl.SelectedTab);
-        }
-
-        private void closeAllButThisTabBarContextMenuItem_Click(object sender, EventArgs e)
-        {
-            TabsHelper.CloseAllTabsExcept(mainTabControl.SelectedTab);
-
-            // Force a save of the current open tab pages
-            SettingsHelper.UpdateOpenTabs();
         }
 
         private void textArea_DragDrop(object sender, DragEventArgs e)
@@ -677,100 +505,293 @@ namespace Dash
             e.Effect = DragDropEffects.All;
         }
 
-        private void textArea_TextChangedDelayed(object sender, TextChangedEventArgs e)
+        #endregion
+
+
+        #region Click Event Handlers
+
+        private void settingsToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            WorkerObject worker = new WorkerObject
-            {
-                Editor = EditorHelper.ActiveEditor,
-                UserVariables = new List<UserVariable>()
-                //UserVariables = EditorHelper.UserVariablesCurrentFile
-            };
-
-            //loadUserVarsBw.CancelAsync();
-
-            if (!loadUserVarsBw.IsBusy)
-            {
-                loadUserVarsBw.RunWorkerAsync(worker);
-
-                // TODO - Move out of here
-                EditorHelper.BuildAutocompleteMenu(ArmaSense);
-            }
-        }
-
-        private void loadUserVarsBw_DoWork(object sender, DoWorkEventArgs e)
-        {
-            WorkerObject workerObject = e.Argument as WorkerObject;
-
-            if (workerObject != null)
-            {
-                var lines = workerObject.Editor.Lines;
-                workerObject.UserVariables.Clear();
-
-                foreach (var line in lines)
-                {
-                    // Loop through each occurange of string to left of "=" -> won't work if multiple variables are declared on one line
-                    var parts = line.Split('=');
-                    if (parts.Length > 1)
-                    {
-                        var variable = parts[0].Trim();
-                        var tooltipParts = parts[1].Split(';');
-                        var tooltip = tooltipParts[0].Trim();
-
-                        var varType = EditorHelper.GetVarTypeFromString(tooltip);
-
-                        workerObject.UserVariables.Add(new UserVariable { VarName = variable, TooltipTitle = varType, TooltipText = tooltip });
-                    }
-
-                    // Attempt using regex -> regex times out if lines are longer than 20 chars
-                    //foreach (Match m in Regex.Matches(cleanLine, "(\\w+.)+="))
-                    //{
-                    //    var parts = m.Value.Split('=');
-                    //    var variable = parts[0].Trim();
-                    //    workerObject.UserVariables.Add(variable);
-                    //}
-                }
-
-                e.Result = workerObject;
-            }
-        }
-
-        private void loadUserVarsBw_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
-        {
-            var result = e.Result as WorkerObject;
-
-            string test = "";
-
-            foreach (var variable in result.UserVariables)
-            {
-                test += variable.VarName;
-            }
-
-            Debug.WriteLine(string.Format("Loaded user vars: \n\n{0}", test));
-
-            try
-            {
-                EditorHelper.UserVariablesCurrentFile = result.UserVariables;
-            }
-            catch (Exception)
-            {
-            }
+            SettingsForm settingsForm = new SettingsForm();
+            settingsForm.ShowDialog();
         }
 
         private void rebuildArmaSenseCacheToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            EditorHelper.BuildAutocompleteMenu(ArmaSense, true);
+            WorkerObject worker = new WorkerObject
+            {
+                Editor = EditorHelper.ActiveEditor,
+                UserVariables = EditorHelper.UserVariablesCurrentFile,
+                ForceUpdate = true
+            };
+
+            if (!loadUserVarsBw.IsBusy)
+            {
+                loadUserVarsBw.RunWorkerAsync(worker);
+            }
+            //EditorHelper.BuildAutocompleteMenu(ArmaSense, true);
         }
 
-        private void textArea_KeyUp(object sender, KeyEventArgs e)
+        private void saveTabBarContextStripItem_Click(object sender, EventArgs e)
         {
-            if (e.KeyCode != Keys.Oemplus) return;
+            saveToolStripMenuItem.PerformClick();
         }
+
+        private void closeTabBarContextMenuItem_Click(object sender, EventArgs e)
+        {
+            TabsHelper.CloseTab(mainTabControl.SelectedTab);
+        }
+
+        private void closeAllButThisTabBarContextMenuItem_Click(object sender, EventArgs e)
+        {
+            TabsHelper.CloseAllTabsExcept(mainTabControl.SelectedTab);
+
+            // Force a save of the current open tab pages
+            SettingsHelper.UpdateOpenTabs();
+        }
+
+        private void saveToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            var editor = EditorHelper.GetActiveEditor();
+
+            var filePath = editor.Tag.ToString();
+            var contents = editor.Text;
+
+            if (filePath == String.Empty)
+            {
+                SaveFileDialog sfd = new SaveFileDialog
+                {
+                    Filter = "SQF File|*.sqf|C++ File|*.cpp|SQM File|*.sqm|All Files|*.*"
+                };
+
+                if (sfd.ShowDialog() == DialogResult.OK)
+                {
+                    File.WriteAllText(sfd.FileName, EditorHelper.GetActiveEditor().Text);
+                    TabsHelper.SetSelectedTabClean();
+                }
+            }
+            else
+            {
+                File.WriteAllText(filePath, contents);
+                TabsHelper.SetSelectedTabClean();
+            }
+
+        }
+
+        private void openFileToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            DialogResult openFile = openFileDialog.ShowDialog();
+
+            if (openFile == DialogResult.OK)
+            {
+                foreach (var file in openFileDialog.FileNames)
+                {
+                    TabsHelper.CreateTabOpenFile(file);
+                    EditorHelper.GetActiveEditor().Text = File.ReadAllText(file);
+                }
+            }
+        }
+
+        private void saveAsToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            SaveFileDialog sfd = new SaveFileDialog
+            {
+                Filter = "SQF File|*.sqf|C++ File|*.cpp|SQM File|*.sqm|All Files|*.*"
+            };
+
+            if (sfd.ShowDialog() == DialogResult.OK)
+            {
+                File.WriteAllText(sfd.FileName, EditorHelper.GetActiveEditor().Text);
+
+                // Close current tab
+                TabsHelper.CloseTab(mainTabControl.SelectedTab);
+
+                // Reopen from file
+                TabsHelper.CreateTabOpenFile(sfd.FileName);
+                EditorHelper.GetActiveEditor().Text = File.ReadAllText(sfd.FileName);
+                TabsHelper.SetSelectedTabClean();
+            }
+        }
+
+        private void commentToolStripButton_Click(object sender, EventArgs e)
+        {
+            EditorHelper.GetActiveEditor().CommentSelected();
+        }
+
+        private void commentCurrentLineToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            EditorHelper.GetActiveEditor().CommentSelected();
+        }
+
+        private void openFileStripButton_Click(object sender, EventArgs e)
+        {
+            openFileToolStripMenuItem.PerformClick();
+        }
+
+        private void saveAllToolStripButton_Click(object sender, EventArgs e)
+        {
+            foreach (TabPage tabPage in mainTabControl.TabPages)
+            {
+                var editor = tabPage.Controls[0];
+
+                var filePath = editor.Tag.ToString();
+                var contents = editor.Text;
+
+                if (filePath == String.Empty)
+                {
+                    SaveFileDialog sfd = new SaveFileDialog
+                    {
+                        Filter = "SQF File|*.sqf|C++ File|*.cpp|SQM File|*.sqm|All Files|*.*"
+                    };
+
+                    if (sfd.ShowDialog() == DialogResult.OK)
+                    {
+                        File.WriteAllText(sfd.FileName, EditorHelper.GetActiveEditor().Text);
+
+                        // Close current tab
+                        TabsHelper.CloseTab(tabPage);
+
+                        // Reopen from file
+                        TabsHelper.CreateTabOpenFile(sfd.FileName);
+                        EditorHelper.GetActiveEditor().Text = File.ReadAllText(sfd.FileName);
+                    }
+                }
+                else
+                {
+                    File.WriteAllText(filePath, contents);
+                }
+            }
+        }
+
+        private void saveToolStripButton_Click(object sender, EventArgs e)
+        {
+            saveToolStripMenuItem.PerformClick();
+        }
+
+        private void lookupDefinitionToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            var editor = EditorHelper.GetActiveEditor();
+
+            var fragment = editor.Selection.GetFragment(@"\w");
+
+            var lookupWord = fragment.Text;
+
+            Process.Start("https://community.bistudio.com/wiki?search=" + lookupWord);
+        }
+
+        private void bohemiaInteractiveWikiToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            Process.Start("https://community.bistudio.com/wiki/Category:Scripting_Commands");
+        }
+
+        private void openFolderToolStripButton_Click(object sender, EventArgs e)
+        {
+            openFolderToolStripMenuItem.PerformClick();
+        }
+
+        private void showQuickHelpToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            var tutorialFile = AppDomain.CurrentDomain.BaseDirectory + "\\tutorial.txt";
+            if (File.Exists(tutorialFile))
+            {
+                TabsHelper.CreateBlankTab(FileType.Other, "tutorial.txt");
+                EditorHelper.GetActiveEditor().Text = File.ReadAllText(tutorialFile);
+            }
+            else
+            {
+                MessageBox.Show("Unable to find tutorial.txt in the Dash install directory\n\nPlease go to the Dash website to view the documentation there instead.");
+            }
+        }
+
+        private void closeTabToolStripButton_Click(object sender, EventArgs e)
+        {
+            closeToolStripMenuItem.PerformClick();
+        }
+
+        private void btnRefreshFileBrowser_Click(object sender, EventArgs e)
+        {
+            FilesHelper.SetTreeviewDirectory(directoryTreeView, Settings.Default.TreeviewDir);
+        }
+
+        private void newSqfFileToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            TabsHelper.CreateBlankTab();
+        }
+
+        private void newCppFileToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            TabsHelper.CreateBlankTab(FileType.Cpp);
+        }
+
+        private void newSqfFileToolStripButton_Click(object sender, EventArgs e)
+        {
+            newSqfFileToolStripMenuItem.PerformClick();
+        }
+
+        private void closeToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            TabsHelper.CloseTab(mainTabControl.SelectedTab);
+            SettingsHelper.UpdateOpenTabs();
+            Settings.Default.Save();
+        }
+
+        private void dashWebsiteToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            Process.Start("http://nevadascout.com/dash/");
+        }
+
+        private void dashDocumentationToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            Process.Start("http://nevadascout.com/dash/docs/");
+        }
+
+        private void openFolderToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            DialogResult result = openFolderDialog.ShowDialog();
+
+            if (result == DialogResult.OK)
+            {
+                FilesHelper.SetTreeviewDirectory(directoryTreeView, openFolderDialog.SelectedPath);
+            }
+
+            Settings.Default.TreeviewDir = openFolderDialog.SelectedPath;
+            Settings.Default.Save();
+        }
+
+
+        private void logStackTraceToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            // Not going to work as the stack trace only includes user clicking "dump stack trace"
+            //Logger.Log("User Requested Stack Trace:");
+            Process.Start("https://github.com/nevadascout/Dash/issues/new");
+        }
+
+        #endregion
+
+        private void mainTabControl_MouseUp(object sender, MouseEventArgs e)
+        {
+            if (e.Button == MouseButtons.Middle)
+            {
+                TabsHelper.CloseTab(TabsHelper.GetClickedTab(e));
+                SettingsHelper.UpdateOpenTabs();
+            }
+
+            if (e.Button == MouseButtons.Right)
+            {
+                var clickedTab = TabsHelper.GetClickedTab(e);
+                var pos = new Point((e.Location.X - 4), (e.Location.Y - 24));
+                mainTabControl.SelectTab(clickedTab);
+                tabBarContextMenu.Show(clickedTab, pos);
+            }
+        }
+
     }
 
     class WorkerObject
     {
         public FastColoredTextBox Editor { get; set; }
         public List<UserVariable> UserVariables { get; set; }
+        public bool ForceUpdate { get; set; }
     }
 
     public class UserVariable
