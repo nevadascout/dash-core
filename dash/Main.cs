@@ -785,6 +785,11 @@ namespace Dash
             }
         }
 
+        private void sendFeedbackToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            Process.Start("http://nevadascout.com/dash-feedback");
+        }
+
     }
 
     class WorkerObject

@@ -87,6 +87,7 @@
             this.bohemiaInteractiveWikiToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator10 = new System.Windows.Forms.ToolStripSeparator();
             this.logStackTraceToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.sendFeedbackToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator14 = new System.Windows.Forms.ToolStripSeparator();
             this.aboutToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.mainSplitContainer = new System.Windows.Forms.SplitContainer();
@@ -105,7 +106,6 @@
             this.toolStripSeparator13 = new System.Windows.Forms.ToolStripSeparator();
             this.closeAllButThisTabBarContextMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.loadUserVarsBw = new System.ComponentModel.BackgroundWorker();
-            this.sendFeedbackToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.mainToolStrip.SuspendLayout();
             this.mainMenuStrip.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.mainSplitContainer)).BeginInit();
@@ -622,6 +622,14 @@
             this.logStackTraceToolStripMenuItem.Text = "Report Bug";
             this.logStackTraceToolStripMenuItem.Click += new System.EventHandler(this.logStackTraceToolStripMenuItem_Click);
             // 
+            // sendFeedbackToolStripMenuItem
+            // 
+            this.sendFeedbackToolStripMenuItem.Image = ((System.Drawing.Image)(resources.GetObject("sendFeedbackToolStripMenuItem.Image")));
+            this.sendFeedbackToolStripMenuItem.Name = "sendFeedbackToolStripMenuItem";
+            this.sendFeedbackToolStripMenuItem.Size = new System.Drawing.Size(186, 22);
+            this.sendFeedbackToolStripMenuItem.Text = "Send Feedback";
+            this.sendFeedbackToolStripMenuItem.Click += new System.EventHandler(this.sendFeedbackToolStripMenuItem_Click);
+            // 
             // toolStripSeparator14
             // 
             this.toolStripSeparator14.Name = "toolStripSeparator14";
@@ -701,7 +709,6 @@
             this.textArea.Cursor = System.Windows.Forms.Cursors.IBeam;
             this.textArea.DisabledColor = System.Drawing.Color.FromArgb(((int)(((byte)(100)))), ((int)(((byte)(180)))), ((int)(((byte)(180)))), ((int)(((byte)(180)))));
             this.textArea.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.textArea.Font = new System.Drawing.Font("Courier New", 9.75F);
             this.textArea.Hotkeys = resources.GetString("textArea.Hotkeys");
             this.textArea.IsReplaceMode = false;
             this.textArea.LeftPadding = 15;
@@ -824,13 +831,6 @@
             this.loadUserVarsBw.WorkerSupportsCancellation = true;
             this.loadUserVarsBw.DoWork += new System.ComponentModel.DoWorkEventHandler(this.loadUserVarsBw_DoWork);
             this.loadUserVarsBw.RunWorkerCompleted += new System.ComponentModel.RunWorkerCompletedEventHandler(this.loadUserVarsBw_RunWorkerCompleted);
-            // 
-            // sendFeedbackToolStripMenuItem
-            // 
-            this.sendFeedbackToolStripMenuItem.Image = ((System.Drawing.Image)(resources.GetObject("sendFeedbackToolStripMenuItem.Image")));
-            this.sendFeedbackToolStripMenuItem.Name = "sendFeedbackToolStripMenuItem";
-            this.sendFeedbackToolStripMenuItem.Size = new System.Drawing.Size(186, 22);
-            this.sendFeedbackToolStripMenuItem.Text = "Send Feedback";
             // 
             // Main
             // 
