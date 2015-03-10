@@ -763,6 +763,7 @@ namespace Dash
         {
             // Not going to work as the stack trace only includes user clicking "dump stack trace"
             //Logger.Log("User Requested Stack Trace:");
+
             Process.Start("https://github.com/nevadascout/Dash/issues/new");
         }
 
