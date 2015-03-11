@@ -18,6 +18,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		readme.md = readme.md
 	EndProjectSection
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Dash.Installer", "..\..\dash-installer\Dash.Installer\Dash.Installer.csproj", "{DE270FA6-2E60-4BD9-9DBA-721230D1F15D}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -55,6 +57,16 @@ Global
 		{6DD14A85-CCFC-4774-BD26-0F5772512319}.Release|Any CPU.Build.0 = Release|Any CPU
 		{6DD14A85-CCFC-4774-BD26-0F5772512319}.ReleaseLITE|Any CPU.ActiveCfg = Release|Any CPU
 		{6DD14A85-CCFC-4774-BD26-0F5772512319}.ReleaseLITE|Any CPU.Build.0 = Release|Any CPU
+		{DE270FA6-2E60-4BD9-9DBA-721230D1F15D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DE270FA6-2E60-4BD9-9DBA-721230D1F15D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DE270FA6-2E60-4BD9-9DBA-721230D1F15D}.Release_32|Any CPU.ActiveCfg = Release|Any CPU
+		{DE270FA6-2E60-4BD9-9DBA-721230D1F15D}.Release_32|Any CPU.Build.0 = Release|Any CPU
+		{DE270FA6-2E60-4BD9-9DBA-721230D1F15D}.Release_64|Any CPU.ActiveCfg = Release|Any CPU
+		{DE270FA6-2E60-4BD9-9DBA-721230D1F15D}.Release_64|Any CPU.Build.0 = Release|Any CPU
+		{DE270FA6-2E60-4BD9-9DBA-721230D1F15D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DE270FA6-2E60-4BD9-9DBA-721230D1F15D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{DE270FA6-2E60-4BD9-9DBA-721230D1F15D}.ReleaseLITE|Any CPU.ActiveCfg = Release|Any CPU
+		{DE270FA6-2E60-4BD9-9DBA-721230D1F15D}.ReleaseLITE|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -62,5 +74,6 @@ Global
 	GlobalSection(NestedProjects) = preSolution
 		{46FEDF07-C2E1-49C9-92D5-AF94B783B18E} = {54928AB1-C9C6-4140-9692-787FF0F45D51}
 		{6DD14A85-CCFC-4774-BD26-0F5772512319} = {EBF49621-F82F-4BBF-A0D5-3C0E8AAAAC56}
+		{DE270FA6-2E60-4BD9-9DBA-721230D1F15D} = {54928AB1-C9C6-4140-9692-787FF0F45D51}
 	EndGlobalSection
 EndGlobal
