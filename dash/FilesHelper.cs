@@ -6,12 +6,19 @@ namespace Dash
 {
     public class FilesHelper
     {
+        public DashGlobal DashGlobal { get; set; }
+
+        public FilesHelper(DashGlobal dashGlobal)
+        {
+            DashGlobal = dashGlobal;
+        }
+
         /// <summary>
         /// Load the nodes for a given path into a tree view
         /// </summary>
         /// <param name="treeView"></param>
         /// <param name="path"></param>
-        public static void SetTreeviewDirectory(TreeView treeView, string path)
+        public void SetTreeviewDirectory(TreeView treeView, string path)
         {
             treeView.Nodes.Clear();
 
@@ -34,7 +41,7 @@ namespace Dash
                 // Scroll to top
                 treeView.Nodes[0].EnsureVisible();
             }
-            catch (Exception ex)
+            catch
             {
                 MessageBox.Show("Unable to open directory");
             }
@@ -45,7 +52,7 @@ namespace Dash
         /// </summary>
         /// <param name="directoryInfo"></param>
         /// <returns></returns>
-        private static TreeNode CreateDirectoryNode(DirectoryInfo directoryInfo)
+        private TreeNode CreateDirectoryNode(DirectoryInfo directoryInfo)
         {
             var directoryNode = new TreeNode(directoryInfo.Name, 0, 0) { Tag = directoryInfo.FullName, Name = directoryInfo.FullName };
 
@@ -103,7 +110,7 @@ namespace Dash
             return directoryNode;
         }
 
-        public static string GetLangFromFile(string file)
+        public string GetLangFromFile(string file)
         {
             var parts = file.Split('.');
             return parts[parts.Length - 1];

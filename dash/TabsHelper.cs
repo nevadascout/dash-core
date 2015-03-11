@@ -11,14 +11,14 @@ namespace Dash
         private EventHandler TextAreaSelectionChangedDelayed { get; set; }
         public TabControl MainTabControl { get; set; }
 
-        public EditorHelper EditorHelper { get; set; }
+        public DashGlobal DashGlobal { get; set; }
 
-        public TabsHelper(EventHandler<TextChangedEventArgs> textAreaTextChanged, EventHandler textAreaSelectionChangedDelayed, TabControl mainTabControl, EditorHelper editorHelper)
+        public TabsHelper(EventHandler<TextChangedEventArgs> textAreaTextChanged, EventHandler textAreaSelectionChangedDelayed, TabControl mainTabControl, DashGlobal dashGlobal)
         {
             MainTabControl = mainTabControl;
             TextAreaSelectionChangedDelayed = textAreaSelectionChangedDelayed;
             TextAreaTextChanged = textAreaTextChanged;
-            EditorHelper = editorHelper;
+            DashGlobal = dashGlobal;
         }
 
 
@@ -28,7 +28,7 @@ namespace Dash
 
             MainTabControl.TabPages.Add(new TabPage(filename) { Name = cleanName });
             MainTabControl.SuspendLayout();
-            MainTabControl.TabPages[cleanName].Controls.Add(EditorHelper.CreateEditor());
+            MainTabControl.TabPages[cleanName].Controls.Add(DashGlobal.EditorHelper.CreateEditor());
             MainTabControl.TabPages[cleanName].Tag = new FileInfo() { Dirty = false };
             MainTabControl.ResumeLayout();
             MainTabControl.SelectTab(cleanName);
@@ -41,7 +41,7 @@ namespace Dash
 
             MainTabControl.TabPages.Add(new TabPage(tabText) { Name = fileToOpen });
             MainTabControl.SuspendLayout();
-            MainTabControl.TabPages[fileToOpen].Controls.Add(EditorHelper.CreateEditor(fileToOpen));
+            MainTabControl.TabPages[fileToOpen].Controls.Add(DashGlobal.EditorHelper.CreateEditor(fileToOpen));
 
             // Irrelevant anyway as this gets overridden when we add the text to the file
             MainTabControl.TabPages[fileToOpen].Tag = new FileInfo() { Dirty = false, CrcHash = "TODO" };
@@ -49,7 +49,7 @@ namespace Dash
             MainTabControl.ResumeLayout();
             MainTabControl.SelectTab(fileToOpen);
 
-            EditorHelper.PerformSyntaxHighlighting(null, FilesHelper.GetLangFromFile(fileToOpen), true);
+            DashGlobal.EditorHelper.PerformSyntaxHighlighting(null, DashGlobal.FilesHelper.GetLangFromFile(fileToOpen), true);
         }
 
 
@@ -81,7 +81,7 @@ namespace Dash
                 {
                     MainTabControl.TabPages.Remove(tab);
                     CreateBlankTab(FileType.Other);
-                    EditorHelper.ActiveEditor.Focus();
+                    DashGlobal.EditorHelper.ActiveEditor.Focus();
                     return;
                 }
 
@@ -103,8 +103,7 @@ namespace Dash
                 CreateBlankTab(FileType.Other);
             }
 
-
-            EditorHelper.ActiveEditor.Focus();
+            DashGlobal.EditorHelper.ActiveEditor.Focus();
         }
 
         public void CloseAllTabsExcept(TabPage tab)

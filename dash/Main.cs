@@ -14,8 +14,6 @@ namespace Dash
 {
     public partial class Main : Form
     {
-        private string lang = "SQF";
-
         private AutocompleteMenu ArmaSense { get; set; }
         
         private FileSystemWatcher watcher = new FileSystemWatcher();
@@ -24,36 +22,33 @@ namespace Dash
         private static bool formLoaded = false;
 
         // Styles
-        private readonly MarkerStyle SameWordsStyle = new MarkerStyle(new SolidBrush(Color.FromArgb(40, Color.Gray)));
+        private readonly MarkerStyle sameWordsStyle = new MarkerStyle(new SolidBrush(Color.FromArgb(40, Color.Gray)));
 
-        public EditorHelper EditorHelper { get; set; }
-        public TabsHelper TabsHelper { get; set; }
-        public SettingsHelper SettingsHelper { get; set; }
         public string Lang { get; set; }
+
+        public DashGlobal DashGlobal { get; set; }
 
 
 
         public Main()
         {
-            this.EditorHelper = new EditorHelper(textArea_TextChanged, textArea_TextChangedDelayed, textArea_KeyUp, textArea_SelectionChangedDelayed, textArea_DragDrop, textArea_DragEnter, mainTabControl, ArmaSense);
-            this.TabsHelper = new TabsHelper(textArea_TextChanged, textArea_SelectionChangedDelayed, mainTabControl, this.EditorHelper);
-            this.SettingsHelper = new SettingsHelper();
-            
+            this.DashGlobal = new DashGlobal(textArea_TextChanged, textArea_TextChangedDelayed, textArea_KeyUp, textArea_SelectionChangedDelayed, textArea_DragDrop, textArea_DragEnter, mainTabControl, ArmaSense);
+
             InitializeComponent();
 
-            this.EditorHelper.MainTabControl = mainTabControl;
-            this.TabsHelper.MainTabControl = mainTabControl;
-            this.SettingsHelper.MainTabControl = mainTabControl;
-            this.EditorHelper.ArmaSenseImageList = armaSenseImageList;
+            this.DashGlobal.EditorHelper.MainTabControl = mainTabControl;
+            this.DashGlobal.TabsHelper.MainTabControl = mainTabControl;
+            this.DashGlobal.SettingsHelper.MainTabControl = mainTabControl;
+            this.DashGlobal.EditorHelper.ArmaSenseImageList = armaSenseImageList;
         }
         
         private void Main_Load(object sender, EventArgs e)
         {
             // Populate Treeview
-            FilesHelper.SetTreeviewDirectory(directoryTreeView, Settings.Default.TreeviewDir);
+            DashGlobal.FilesHelper.SetTreeviewDirectory(directoryTreeView, Settings.Default.TreeviewDir);
 
             // TODO - Optimise this
-            EditorHelper.UserVariablesCurrentFile = new List<UserVariable>();
+            DashGlobal.EditorHelper.UserVariablesCurrentFile = new List<UserVariable>();
 
             // Set window size from memory
             if (Settings.Default.WindowMaximised)
@@ -82,8 +77,8 @@ namespace Dash
             {
                 if (Settings.Default.OpenTabs.Count == 0)
                 {
-                    TabsHelper.CreateBlankTab(FileType.Other);
-                    ArmaSense = EditorHelper.CreateArmaSense();
+                    DashGlobal.TabsHelper.CreateBlankTab(FileType.Other);
+                    ArmaSense = DashGlobal.EditorHelper.CreateArmaSense();
                 }
                 else
                 {
@@ -93,11 +88,11 @@ namespace Dash
                         {
                             if (File.Exists(file))
                             {
-                                TabsHelper.CreateTabOpenFile(file);
-                                EditorHelper.GetActiveEditor().Text = File.ReadAllText(file);
-                                TabsHelper.SetSelectedTabClean();
+                                DashGlobal.TabsHelper.CreateTabOpenFile(file);
+                                DashGlobal.EditorHelper.GetActiveEditor().Text = File.ReadAllText(file);
+                                DashGlobal.TabsHelper.SetSelectedTabClean();
 
-                                EditorHelper.PerformSyntaxHighlighting(null, FilesHelper.GetLangFromFile(file), true);
+                                DashGlobal.EditorHelper.PerformSyntaxHighlighting(null, DashGlobal.FilesHelper.GetLangFromFile(file), true);
                             }
                             else
                             {
@@ -123,7 +118,7 @@ namespace Dash
 
             if (mainTabControl.TabPages.Count == 0)
             {
-                TabsHelper.CreateBlankTab();
+                DashGlobal.TabsHelper.CreateBlankTab();
                 this.Text = "{new file} - Dash";
             }
 
@@ -132,9 +127,9 @@ namespace Dash
                 var tutorialFile = AppDomain.CurrentDomain.BaseDirectory + "\\tutorial.txt";
                 if (File.Exists(tutorialFile))
                 {
-                    TabsHelper.CreateBlankTab(FileType.Other, "tutorial.txt");
-                    EditorHelper.GetActiveEditor().Text = File.ReadAllText(tutorialFile);
-                    TabsHelper.SetSelectedTabClean();
+                    DashGlobal.TabsHelper.CreateBlankTab(FileType.Other, "tutorial.txt");
+                    DashGlobal.EditorHelper.GetActiveEditor().Text = File.ReadAllText(tutorialFile);
+                    DashGlobal.TabsHelper.SetSelectedTabClean();
                 }
             }
 
@@ -158,12 +153,12 @@ namespace Dash
             // Apply stored settings
             mainSplitContainer.SplitterDistance = Convert.ToInt32(Settings.Default.SplitterWidth);
 
-            EditorHelper.ActiveEditor.GoHome();
+            DashGlobal.EditorHelper.ActiveEditor.GoHome();
         }
 
         private void Main_FormClosing(object sender, FormClosingEventArgs e)
         {
-            SettingsHelper.UpdateOpenTabs();
+            DashGlobal.SettingsHelper.UpdateOpenTabs();
             Settings.Default.SelectedTab = mainTabControl.SelectedIndex;
             Settings.Default.Save();
         }
@@ -188,12 +183,12 @@ namespace Dash
 
         public void InitStylesPriority()
         {
-            textArea.AddStyle(SameWordsStyle);
+            textArea.AddStyle(sameWordsStyle);
         }
 
         private void FileSystemChanged(object source, FileSystemEventArgs e)
         {
-            FilesHelper.SetTreeviewDirectory(directoryTreeView, Settings.Default.TreeviewDir);
+            DashGlobal.FilesHelper.SetTreeviewDirectory(directoryTreeView, Settings.Default.TreeviewDir);
         }
 
 
@@ -218,7 +213,7 @@ namespace Dash
                 // Don't create new tab if the file is already open
                 if (tabOpen)
                 {
-                    TabPage tab = TabsHelper.GetTabByFilename(mainTabControl, filename);
+                    TabPage tab = DashGlobal.TabsHelper.GetTabByFilename(mainTabControl, filename);
                     mainTabControl.SelectTab(tab);
 
                     return;
@@ -230,16 +225,16 @@ namespace Dash
                 }
                 else
                 {
-                    if (mainTabControl.SelectedTab != null && (mainTabControl.SelectedTab.Text == "New File" && EditorHelper.GetActiveEditor().Text == string.Empty))
+                    if (mainTabControl.SelectedTab != null && (mainTabControl.SelectedTab.Text == "New File" && DashGlobal.EditorHelper.GetActiveEditor().Text == string.Empty))
                     {
                         // Close the current tab
                         mainTabControl.TabPages.Remove(mainTabControl.SelectedTab);
                     }
 
-                    TabsHelper.CreateTabOpenFile(filename);
-                    Lang = FilesHelper.GetLangFromFile(filename);
-                    EditorHelper.ActiveEditor.Text = File.ReadAllText(filename);
-                    TabsHelper.SetSelectedTabClean();
+                    DashGlobal.TabsHelper.CreateTabOpenFile(filename);
+                    Lang = DashGlobal.FilesHelper.GetLangFromFile(filename);
+                    DashGlobal.EditorHelper.ActiveEditor.Text = File.ReadAllText(filename);
+                    DashGlobal.TabsHelper.SetSelectedTabClean();
                 }
             }
         }
@@ -259,20 +254,20 @@ namespace Dash
                 {
                     this.Text = tabControl.SelectedTab.Controls[0].Tag + " - Dash";
 
-                    Lang = FilesHelper.GetLangFromFile(tabControl.SelectedTab.Controls[0].Tag.ToString());
+                    Lang = DashGlobal.FilesHelper.GetLangFromFile(tabControl.SelectedTab.Controls[0].Tag.ToString());
                 }
 
                 // TODO - Optimise this
-                ArmaSense = EditorHelper.CreateArmaSense();
+                ArmaSense = DashGlobal.EditorHelper.CreateArmaSense();
             }
 
             // Break if the form isn't loaded
             if (!formLoaded) return;
             
             // TODO - Optimise this
-            EditorHelper.UserVariablesCurrentFile = new List<UserVariable>();
+            DashGlobal.EditorHelper.UserVariablesCurrentFile = new List<UserVariable>();
 
-            SettingsHelper.UpdateOpenTabs();
+            DashGlobal.SettingsHelper.UpdateOpenTabs();
             Settings.Default.Save();
         }
 
@@ -300,7 +295,7 @@ namespace Dash
                         var tooltipParts = parts[1].Split(';');
                         var tooltip = tooltipParts[0].Trim();
 
-                        var varType = EditorHelper.GetVarTypeFromString(tooltip);
+                        var varType = DashGlobal.EditorHelper.GetVarTypeFromString(tooltip);
 
                         workerObject.UserVariables.Add(new UserVariable { VarName = variable, TooltipTitle = varType, TooltipText = tooltip });
                     }
@@ -326,9 +321,9 @@ namespace Dash
             {
                 if (result == null) return;
 
-                EditorHelper.UserVariablesCurrentFile = result.UserVariables;
+                DashGlobal.EditorHelper.UserVariablesCurrentFile = result.UserVariables;
 
-                EditorHelper.BuildAutocompleteMenu(ArmaSense, result.ForceUpdate);
+                DashGlobal.EditorHelper.BuildAutocompleteMenu(ArmaSense, result.ForceUpdate);
             }
             catch (Exception ex)
             {
@@ -356,23 +351,24 @@ namespace Dash
             e.ChangedRange.SetFoldingMarkers(@"//#region\b", @"//#endregion\b");
             e.ChangedRange.SetFoldingMarkers(@"// #region\b", @"// #endregion\b");
 
-            EditorHelper.PerformSyntaxHighlighting(e, Lang);
+            DashGlobal.EditorHelper.PerformSyntaxHighlighting(e, Lang);
+
 
             // Todo - switch this out for a check against the file CRC hash
-            //TabsHelper.CheckTabDirtyState();
+            //FilesHelper.CheckFileDirtyState();
+
 
             // Make file dirty
             FileInfo tag = mainTabControl.SelectedTab.Tag as FileInfo;
             if (tag != null) tag.Dirty = true;
             mainTabControl.SelectedTab.Tag = tag;
-
         }
 
         private void textArea_TextChangedDelayed(object sender, TextChangedEventArgs e)
         {
             WorkerObject worker = new WorkerObject
             {
-                Editor = EditorHelper.ActiveEditor,
+                Editor = DashGlobal.EditorHelper.ActiveEditor,
                 UserVariables = new List<UserVariable>()
             };
 
@@ -384,11 +380,9 @@ namespace Dash
 
         public void textArea_SelectionChangedDelayed(object sender, EventArgs e)
         {
-            var editor = EditorHelper.GetActiveEditor();
+            var editor = DashGlobal.EditorHelper.GetActiveEditor();
 
-            editor.Range.ClearStyle(SameWordsStyle);
-            //editor.Bookmarks.Clear();
-
+            editor.Range.ClearStyle(sameWordsStyle);
 
             if (editor.Selection.IsEmpty)
             {
@@ -406,8 +400,7 @@ namespace Dash
                 {
                     foreach (var r in ranges)
                     {
-                        r.SetStyle(SameWordsStyle);
-                        //editor.Bookmarks.Add(r.FromLine);
+                        r.SetStyle(sameWordsStyle);
                     }
                 }
             }
@@ -442,8 +435,7 @@ namespace Dash
                 {
                     foreach (var r in ranges)
                     {
-                        r.SetStyle(SameWordsStyle);
-                        //editor.Bookmarks.Add(r.FromLine);
+                        r.SetStyle(sameWordsStyle);
                     }
                 }
             }
@@ -455,7 +447,7 @@ namespace Dash
             {
                 WorkerObject worker = new WorkerObject
                 {
-                    Editor = EditorHelper.ActiveEditor,
+                    Editor = DashGlobal.EditorHelper.ActiveEditor,
                     UserVariables = new List<UserVariable>(),
                     ForceUpdate = true
                 };
@@ -486,14 +478,14 @@ namespace Dash
 
                         try
                         {
-                            if (mainTabControl.SelectedTab != null && (mainTabControl.SelectedTab.Text == "New File" && EditorHelper.GetActiveEditor().Text == string.Empty))
+                            if (mainTabControl.SelectedTab != null && (mainTabControl.SelectedTab.Text == "New File" && DashGlobal.EditorHelper.GetActiveEditor().Text == string.Empty))
                             {
                                 // Close the current tab
                                 mainTabControl.TabPages.Remove(mainTabControl.SelectedTab);
                             }
 
-                            TabsHelper.CreateTabOpenFile(fileName);
-                            EditorHelper.GetActiveEditor().Text = File.ReadAllText(fileName);
+                            DashGlobal.TabsHelper.CreateTabOpenFile(fileName);
+                            DashGlobal.EditorHelper.GetActiveEditor().Text = File.ReadAllText(fileName);
                         }
                         catch (Exception)
                         {
@@ -524,8 +516,8 @@ namespace Dash
         {
             WorkerObject worker = new WorkerObject
             {
-                Editor = EditorHelper.ActiveEditor,
-                UserVariables = EditorHelper.UserVariablesCurrentFile,
+                Editor = DashGlobal.EditorHelper.ActiveEditor,
+                UserVariables = DashGlobal.EditorHelper.UserVariablesCurrentFile,
                 ForceUpdate = true
             };
 
@@ -543,20 +535,20 @@ namespace Dash
 
         private void closeTabBarContextMenuItem_Click(object sender, EventArgs e)
         {
-            TabsHelper.CloseTab(mainTabControl.SelectedTab);
+            DashGlobal.TabsHelper.CloseTab(mainTabControl.SelectedTab);
         }
 
         private void closeAllButThisTabBarContextMenuItem_Click(object sender, EventArgs e)
         {
-            TabsHelper.CloseAllTabsExcept(mainTabControl.SelectedTab);
+            DashGlobal.TabsHelper.CloseAllTabsExcept(mainTabControl.SelectedTab);
 
             // Force a save of the current open tab pages
-            SettingsHelper.UpdateOpenTabs();
+            DashGlobal.SettingsHelper.UpdateOpenTabs();
         }
 
         private void saveToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            var editor = EditorHelper.GetActiveEditor();
+            var editor = DashGlobal.EditorHelper.GetActiveEditor();
 
             var filePath = editor.Tag.ToString();
             var contents = editor.Text;
@@ -570,14 +562,14 @@ namespace Dash
 
                 if (sfd.ShowDialog() == DialogResult.OK)
                 {
-                    File.WriteAllText(sfd.FileName, EditorHelper.GetActiveEditor().Text);
-                    TabsHelper.SetSelectedTabClean();
+                    File.WriteAllText(sfd.FileName, DashGlobal.EditorHelper.GetActiveEditor().Text);
+                    DashGlobal.TabsHelper.SetSelectedTabClean();
                 }
             }
             else
             {
                 File.WriteAllText(filePath, contents);
-                TabsHelper.SetSelectedTabClean();
+                DashGlobal.TabsHelper.SetSelectedTabClean();
             }
         }
 
@@ -589,8 +581,8 @@ namespace Dash
             {
                 foreach (var file in openFileDialog.FileNames)
                 {
-                    TabsHelper.CreateTabOpenFile(file);
-                    EditorHelper.GetActiveEditor().Text = File.ReadAllText(file);
+                    DashGlobal.TabsHelper.CreateTabOpenFile(file);
+                    DashGlobal.EditorHelper.GetActiveEditor().Text = File.ReadAllText(file);
                 }
             }
         }
@@ -604,26 +596,26 @@ namespace Dash
 
             if (sfd.ShowDialog() == DialogResult.OK)
             {
-                File.WriteAllText(sfd.FileName, EditorHelper.GetActiveEditor().Text);
+                File.WriteAllText(sfd.FileName, DashGlobal.EditorHelper.GetActiveEditor().Text);
 
                 // Close current tab
-                TabsHelper.CloseTab(mainTabControl.SelectedTab);
+                DashGlobal.TabsHelper.CloseTab(mainTabControl.SelectedTab);
 
                 // Reopen from file
-                TabsHelper.CreateTabOpenFile(sfd.FileName);
-                EditorHelper.GetActiveEditor().Text = File.ReadAllText(sfd.FileName);
-                TabsHelper.SetSelectedTabClean();
+                DashGlobal.TabsHelper.CreateTabOpenFile(sfd.FileName);
+                DashGlobal.EditorHelper.GetActiveEditor().Text = File.ReadAllText(sfd.FileName);
+                DashGlobal.TabsHelper.SetSelectedTabClean();
             }
         }
 
         private void commentToolStripButton_Click(object sender, EventArgs e)
         {
-            EditorHelper.GetActiveEditor().CommentSelected();
+            DashGlobal.EditorHelper.ActiveEditor.CommentSelected();
         }
 
         private void commentCurrentLineToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            EditorHelper.GetActiveEditor().CommentSelected();
+            DashGlobal.EditorHelper.ActiveEditor.CommentSelected();
         }
 
         private void openFileStripButton_Click(object sender, EventArgs e)
@@ -649,14 +641,14 @@ namespace Dash
 
                     if (sfd.ShowDialog() == DialogResult.OK)
                     {
-                        File.WriteAllText(sfd.FileName, EditorHelper.GetActiveEditor().Text);
+                        File.WriteAllText(sfd.FileName, DashGlobal.EditorHelper.GetActiveEditor().Text);
 
                         // Close current tab
-                        TabsHelper.CloseTab(tabPage);
+                        DashGlobal.TabsHelper.CloseTab(tabPage);
 
                         // Reopen from file
-                        TabsHelper.CreateTabOpenFile(sfd.FileName);
-                        EditorHelper.GetActiveEditor().Text = File.ReadAllText(sfd.FileName);
+                        DashGlobal.TabsHelper.CreateTabOpenFile(sfd.FileName);
+                        DashGlobal.EditorHelper.GetActiveEditor().Text = File.ReadAllText(sfd.FileName);
                     }
                 }
                 else
@@ -673,7 +665,7 @@ namespace Dash
 
         private void lookupDefinitionToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            var editor = EditorHelper.GetActiveEditor();
+            var editor = DashGlobal.EditorHelper.GetActiveEditor();
 
             var fragment = editor.Selection.GetFragment(@"\w");
 
@@ -697,8 +689,8 @@ namespace Dash
             var tutorialFile = AppDomain.CurrentDomain.BaseDirectory + "\\tutorial.txt";
             if (File.Exists(tutorialFile))
             {
-                TabsHelper.CreateBlankTab(FileType.Other, "tutorial.txt");
-                EditorHelper.GetActiveEditor().Text = File.ReadAllText(tutorialFile);
+                DashGlobal.TabsHelper.CreateBlankTab(FileType.Other, "tutorial.txt");
+                DashGlobal.EditorHelper.GetActiveEditor().Text = File.ReadAllText(tutorialFile);
             }
             else
             {
@@ -713,17 +705,17 @@ namespace Dash
 
         private void btnRefreshFileBrowser_Click(object sender, EventArgs e)
         {
-            FilesHelper.SetTreeviewDirectory(directoryTreeView, Settings.Default.TreeviewDir);
+            DashGlobal.FilesHelper.SetTreeviewDirectory(directoryTreeView, Settings.Default.TreeviewDir);
         }
 
         private void newSqfFileToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            TabsHelper.CreateBlankTab();
+            DashGlobal.TabsHelper.CreateBlankTab();
         }
 
         private void newCppFileToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            TabsHelper.CreateBlankTab(FileType.Cpp);
+            DashGlobal.TabsHelper.CreateBlankTab(FileType.Cpp);
         }
 
         private void newSqfFileToolStripButton_Click(object sender, EventArgs e)
@@ -733,8 +725,8 @@ namespace Dash
 
         private void closeToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            TabsHelper.CloseTab(mainTabControl.SelectedTab);
-            SettingsHelper.UpdateOpenTabs();
+            DashGlobal.TabsHelper.CloseTab(mainTabControl.SelectedTab);
+            DashGlobal.SettingsHelper.UpdateOpenTabs();
             Settings.Default.Save();
         }
 
@@ -754,7 +746,7 @@ namespace Dash
 
             if (result == DialogResult.OK)
             {
-                FilesHelper.SetTreeviewDirectory(directoryTreeView, openFolderDialog.SelectedPath);
+                DashGlobal.FilesHelper.SetTreeviewDirectory(directoryTreeView, openFolderDialog.SelectedPath);
             }
 
             Settings.Default.TreeviewDir = openFolderDialog.SelectedPath;
@@ -776,13 +768,13 @@ namespace Dash
         {
             if (e.Button == MouseButtons.Middle)
             {
-                TabsHelper.CloseTab(TabsHelper.GetClickedTab(e));
-                SettingsHelper.UpdateOpenTabs();
+                DashGlobal.TabsHelper.CloseTab(DashGlobal.TabsHelper.GetClickedTab(e));
+                DashGlobal.SettingsHelper.UpdateOpenTabs();
             }
 
             if (e.Button == MouseButtons.Right)
             {
-                var clickedTab = TabsHelper.GetClickedTab(e);
+                var clickedTab = DashGlobal.TabsHelper.GetClickedTab(e);
                 var pos = new Point((e.Location.X - 4), (e.Location.Y - 24));
                 mainTabControl.SelectTab(clickedTab);
                 tabBarContextMenu.Show(clickedTab, pos);
