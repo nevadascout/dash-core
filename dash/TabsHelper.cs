@@ -42,7 +42,10 @@ namespace Dash
             MainTabControl.TabPages.Add(new TabPage(tabText) { Name = fileToOpen });
             MainTabControl.SuspendLayout();
             MainTabControl.TabPages[fileToOpen].Controls.Add(EditorHelper.CreateEditor(fileToOpen));
-            MainTabControl.TabPages[fileToOpen].Tag = new FileInfo() { Dirty = true, CrcHash = "TODO" };
+
+            // Irrelevant anyway as this gets overridden when we add the text to the file
+            MainTabControl.TabPages[fileToOpen].Tag = new FileInfo() { Dirty = false, CrcHash = "TODO" };
+
             MainTabControl.ResumeLayout();
             MainTabControl.SelectTab(fileToOpen);
 

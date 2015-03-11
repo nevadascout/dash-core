@@ -280,6 +280,7 @@ namespace Dash
 
 
         #region Background Worker for building file userVars / rebuilding ArmaSense on update
+
         private void loadUserVarsBw_DoWork(object sender, DoWorkEventArgs e)
         {
             WorkerObject workerObject = e.Argument as WorkerObject;
@@ -337,6 +338,7 @@ namespace Dash
                 Logger.Log(ex.Message);
             }
         }
+
         #endregion
 
         
@@ -472,6 +474,7 @@ namespace Dash
         private void textArea_DragDrop(object sender, DragEventArgs e)
         {
             object filename = e.Data.GetData("FileDrop");
+
             if (filename != null)
             {
                 var list = filename as string[];
@@ -480,6 +483,10 @@ namespace Dash
                 {
                     foreach (var fileName in list)
                     {
+                        // Check we're opening a file
+                        FileAttributes fileAttributes = File.GetAttributes(fileName);
+                        if((fileAttributes & FileAttributes.Directory) == FileAttributes.Directory) break;
+
                         try
                         {
                             if (mainTabControl.SelectedTab != null && (mainTabControl.SelectedTab.Text == "New File" && EditorHelper.GetActiveEditor().Text == string.Empty))
