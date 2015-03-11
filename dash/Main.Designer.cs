@@ -582,7 +582,6 @@
             // 
             // dashWebsiteToolStripMenuItem
             // 
-            this.dashWebsiteToolStripMenuItem.Enabled = false;
             this.dashWebsiteToolStripMenuItem.Name = "dashWebsiteToolStripMenuItem";
             this.dashWebsiteToolStripMenuItem.Size = new System.Drawing.Size(186, 22);
             this.dashWebsiteToolStripMenuItem.Text = "Dash Website";
@@ -590,7 +589,6 @@
             // 
             // dashDocumentationToolStripMenuItem
             // 
-            this.dashDocumentationToolStripMenuItem.Enabled = false;
             this.dashDocumentationToolStripMenuItem.Image = ((System.Drawing.Image)(resources.GetObject("dashDocumentationToolStripMenuItem.Image")));
             this.dashDocumentationToolStripMenuItem.Name = "dashDocumentationToolStripMenuItem";
             this.dashDocumentationToolStripMenuItem.Size = new System.Drawing.Size(186, 22);

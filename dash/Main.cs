@@ -737,12 +737,12 @@ namespace Dash
 
         private void dashWebsiteToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            Process.Start("http://nevadascout.com/dash/");
+            Process.Start("http://dash.nevadascout.com/");
         }
 
         private void dashDocumentationToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            Process.Start("http://nevadascout.com/dash/docs/");
+            Process.Start("http://dash.nevadascout.com/docs/");
         }
 
         private void openFolderToolStripMenuItem_Click(object sender, EventArgs e)
@@ -788,7 +788,7 @@ namespace Dash
 
         private void sendFeedbackToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            Process.Start("http://nevadascout.com/dash-feedback");
+            Process.Start("http://dash.nevadascout.com/feedback");
         }
 
     }
