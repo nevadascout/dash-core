@@ -57,51 +57,52 @@ namespace Dash
         {
             var tabCount = MainTabControl.TabPages.Count;
             bool closingCurrentTab = (MainTabControl.SelectedTab == tab);
+            var closingTabId = MainTabControl.SelectedIndex;
 
             // Break out if no tab selected
             if (tab == null) return;
-
-            // Change tab first to stop title bar flashing up with tab index 0
-            if (!closingCurrentTab && tabCount > 1)
-            {
-                if (MainTabControl.SelectedIndex == (tabCount - 1))
-                {
-                    // Select 
-                    MainTabControl.SelectTab(MainTabControl.TabPages[MainTabControl.SelectedIndex]);
-                }
-                else
-                {
-                    // Select the tab to the right
-                    MainTabControl.SelectTab(MainTabControl.TabPages[MainTabControl.SelectedIndex + 1]);
-                }
-            }
+            if (!closingCurrentTab) return;
 
             var tag = MainTabControl.SelectedTab.Tag as FileInfo;
 
             if (tag.Dirty)
             {
-                DialogResult  message = MessageBox.Show("This file has been changed. Close without saving?", "Close without saving?", MessageBoxButtons.YesNo);
-
+                DialogResult  message = MessageBox.Show("This file has been modified. Do you want to save it?", "Save file?", MessageBoxButtons.YesNo);
                 if (message == DialogResult.Yes)
                 {
-                    MainTabControl.TabPages.Remove(tab);
-
-                    if (MainTabControl.TabPages.Count == 0)
-                    {
-                        CreateBlankTab(FileType.Other);
-                    }
+                    // TODO -- Add call to filesHelper.SaveFile() to save the file or save as if it hasn't yet been saved
+                    return;
                 }
-
-                // Break out
-                return;
             }
 
+            if (closingTabId == (tabCount - 1))
+            {
+                if (MainTabControl.TabPages.Count == 1)
+                {
+                    MainTabControl.TabPages.Remove(tab);
+                    CreateBlankTab(FileType.Other);
+                    EditorHelper.ActiveEditor.Focus();
+                    return;
+                }
+
+                // If we're closing the last tab in the list, select the tab to the left
+                MainTabControl.SelectTab(MainTabControl.TabPages[closingTabId - 1]);
+            }
+            else
+            {
+                // Select the right-most tab
+                MainTabControl.SelectTab(MainTabControl.TabPages[closingTabId + 1]);
+            }
+
+
+            // Close the tab
             MainTabControl.TabPages.Remove(tab);
 
             if (MainTabControl.TabPages.Count == 0)
             {
                 CreateBlankTab(FileType.Other);
             }
+
 
             EditorHelper.ActiveEditor.Focus();
         }

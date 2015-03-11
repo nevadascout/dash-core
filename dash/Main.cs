@@ -579,7 +579,6 @@ namespace Dash
                 File.WriteAllText(filePath, contents);
                 TabsHelper.SetSelectedTabClean();
             }
-
         }
 
         private void openFileToolStripMenuItem_Click(object sender, EventArgs e)
