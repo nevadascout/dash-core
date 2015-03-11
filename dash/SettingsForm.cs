@@ -28,6 +28,8 @@ namespace Dash
             chkAutoAddFileCopyrightComment.Checked = settings.EnableFileHeaderComment;
             commentEditor.Text = settings.FileHeaderCommentText;
 
+            chkEnableLineWrapping.Checked = settings.EnableLineWrapping;
+
             chkCustomSyntaxHighlighter.Checked = settings.EnableCustomSyntaxTheme;
             chkCustomThemes.Checked = settings.EnableCustomDashTheme;
 
@@ -127,6 +129,23 @@ namespace Dash
         private void SettingsForm_FormClosing(object sender, FormClosingEventArgs e)
         {
             Properties.Settings.Default.Reload();
+        }
+
+        private void lnkResetToDefault_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        {
+            DialogResult resetDialogResult = MessageBox.Show("Do you want to reset your Dash settings?\n\nWarning: This is irreversible", "Reset Settings?", MessageBoxButtons.YesNo);
+            if (resetDialogResult == DialogResult.Yes)
+            {
+                Properties.Settings.Default.Reset();
+                Properties.Settings.Default.Save();
+                MessageBox.Show("Your Dash settings have been reset to their defaults.\nPlease restart Dash for this to take effect.");
+                this.Close();
+            }
+        }
+
+        private void chkEnableLineWrapping_CheckedChanged(object sender, System.EventArgs e)
+        {
+            Properties.Settings.Default.EnableLineWrapping = chkEnableLineWrapping.Checked;
         }
     }
 }

@@ -159,8 +159,6 @@ namespace Dash
             mainSplitContainer.SplitterDistance = Convert.ToInt32(Settings.Default.SplitterWidth);
 
             EditorHelper.ActiveEditor.GoHome();
-
-            Logger.Log("testMessage");
         }
 
         private void Main_FormClosing(object sender, FormClosingEventArgs e)
@@ -334,7 +332,6 @@ namespace Dash
             }
             catch (Exception ex)
             {
-                //MessageBox.Show(ex.Message);
                 Logger.Log(ex.Message);
             }
         }

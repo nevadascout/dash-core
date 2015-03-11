@@ -81,15 +81,19 @@ namespace Dash
             {
                 Dock = DockStyle.Fill,
 
-                AutoIndent = true,
-                AutoIndentChars = true,
+                // Load options from settings
+                AutoIndent = Settings.Default.EnableAutoIndentation,
+                AutoIndentChars = Settings.Default.EnableAutoIndentation,
+                AutoIndentExistingLines = Settings.Default.EnableAutoIndentation,
+                WordWrap = Settings.Default.EnableLineWrapping,
+                WordWrapAutoIndent = false,
+                //WordWrapMode = WordWrapMode.WordWrapPreferredWidth,
 
                 AllowDrop = true,
 
                 AllowMacroRecording = false,
                 AutoCompleteBrackets = true,
                 AutoCompleteBracketsList = new char[] { '{', '}', '(', ')', '[', ']', '"', '"', '\'', '\'' },
-                AutoIndentExistingLines = false,
                 CaretColor = Color.Navy,
                 CurrentLineColor = Color.CadetBlue,
                 LeftPadding = 15,
@@ -249,6 +253,9 @@ namespace Dash
             if(!forceUpdate)
                 if (ArmaListItemsCount == itemsCount) return;
 
+            // Don't load ArmaSense if the user has turned it off
+            if (!Settings.Default.EnableArmaSense) return;
+
             if (armaSense == null)
             {
                 armaSense = this.CreateArmaSense();
@@ -282,7 +289,6 @@ namespace Dash
             }
             catch (Exception ex)
             {
-                //MessageBox.Show(ex.Message);
                 Logger.Log(ex.Message);
             }
 
