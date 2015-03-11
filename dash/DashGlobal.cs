@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Windows.Forms;
+using Dash.Properties;
 using FastColoredTextBoxNS;
 
 namespace Dash
@@ -8,9 +9,9 @@ namespace Dash
     {
         public EditorHelper EditorHelper { get; private set; }
         public FilesHelper FilesHelper { get; set; }
-        public Logger Logger { get; set; }
         public SettingsHelper SettingsHelper { get; set; }
         public TabsHelper TabsHelper { get; set; }
+        public Main MainWindow { get; set; }
 
         public DashGlobal(
             EventHandler<TextChangedEventArgs> textAreaTextChanged,
@@ -20,7 +21,8 @@ namespace Dash
             DragEventHandler textAreaDragDrop,
             DragEventHandler textAreaDragEnter,
             TabControl mainTabControl,
-            AutocompleteMenu armaSense)
+            AutocompleteMenu armaSense,
+            Main mainWindow)
         {
             EditorHelper = new EditorHelper(
                 textAreaTextChanged,
@@ -40,9 +42,14 @@ namespace Dash
                 this);
 
             FilesHelper = new FilesHelper(this);
-
             SettingsHelper = new SettingsHelper();
-            Logger = new Logger();
+
+            MainWindow = mainWindow;
+        }
+
+        public void SetWindowTitle(string titleText)
+        {
+            MainWindow.Text = titleText + " - " + Settings.Default.AppName;
         }
     }
 }

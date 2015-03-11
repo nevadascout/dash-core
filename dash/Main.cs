@@ -24,15 +24,23 @@ namespace Dash
         // Styles
         private readonly MarkerStyle sameWordsStyle = new MarkerStyle(new SolidBrush(Color.FromArgb(40, Color.Gray)));
 
-        public string Lang { get; set; }
+        public static string Lang { get; set; }
 
         public DashGlobal DashGlobal { get; set; }
 
 
-
         public Main()
         {
-            this.DashGlobal = new DashGlobal(textArea_TextChanged, textArea_TextChangedDelayed, textArea_KeyUp, textArea_SelectionChangedDelayed, textArea_DragDrop, textArea_DragEnter, mainTabControl, ArmaSense);
+            this.DashGlobal = new DashGlobal(
+                textArea_TextChanged,
+                textArea_TextChangedDelayed,
+                textArea_KeyUp,
+                textArea_SelectionChangedDelayed,
+                textArea_DragDrop,
+                textArea_DragEnter,
+                mainTabControl,
+                ArmaSense,
+                this);
 
             InitializeComponent();
 
@@ -86,18 +94,8 @@ namespace Dash
                     {
                         try
                         {
-                            if (File.Exists(file))
-                            {
-                                DashGlobal.TabsHelper.CreateTabOpenFile(file);
-                                DashGlobal.EditorHelper.GetActiveEditor().Text = File.ReadAllText(file);
-                                DashGlobal.TabsHelper.SetSelectedTabClean();
-
-                                DashGlobal.EditorHelper.PerformSyntaxHighlighting(null, DashGlobal.FilesHelper.GetLangFromFile(file), true);
-                            }
-                            else
-                            {
-                                throw new Exception("File not found!");
-                            }
+                            if (File.Exists(file)) DashGlobal.TabsHelper.CreateTabOpenFile(file);
+                            else throw new Exception("File not found!");
                         }
                         catch
                         {
@@ -119,7 +117,7 @@ namespace Dash
             if (mainTabControl.TabPages.Count == 0)
             {
                 DashGlobal.TabsHelper.CreateBlankTab();
-                this.Text = "{new file} - Dash";
+                DashGlobal.SetWindowTitle("{new file}");
             }
 
             if ((bool)Settings.Default.FirstLoad)
@@ -232,9 +230,6 @@ namespace Dash
                     }
 
                     DashGlobal.TabsHelper.CreateTabOpenFile(filename);
-                    Lang = DashGlobal.FilesHelper.GetLangFromFile(filename);
-                    DashGlobal.EditorHelper.ActiveEditor.Text = File.ReadAllText(filename);
-                    DashGlobal.TabsHelper.SetSelectedTabClean();
                 }
             }
         }
@@ -248,11 +243,11 @@ namespace Dash
                 tabControl.SelectedTab.Controls[0].Focus();
                 if (tabControl.SelectedTab.Controls[0].Tag.ToString() == "")
                 {
-                    this.Text = "{new file} - Dash";
+                    DashGlobal.SetWindowTitle("{new file}");
                 }
                 else
                 {
-                    this.Text = tabControl.SelectedTab.Controls[0].Tag + " - Dash";
+                    DashGlobal.SetWindowTitle(tabControl.SelectedTab.Controls[0].Tag.ToString());
 
                     Lang = DashGlobal.FilesHelper.GetLangFromFile(tabControl.SelectedTab.Controls[0].Tag.ToString());
                 }
@@ -270,6 +265,7 @@ namespace Dash
             DashGlobal.SettingsHelper.UpdateOpenTabs();
             Settings.Default.Save();
         }
+
 
 
         #region Background Worker for building file userVars / rebuilding ArmaSense on update
@@ -485,7 +481,6 @@ namespace Dash
                             }
 
                             DashGlobal.TabsHelper.CreateTabOpenFile(fileName);
-                            DashGlobal.EditorHelper.GetActiveEditor().Text = File.ReadAllText(fileName);
                         }
                         catch (Exception)
                         {
@@ -582,7 +577,6 @@ namespace Dash
                 foreach (var file in openFileDialog.FileNames)
                 {
                     DashGlobal.TabsHelper.CreateTabOpenFile(file);
-                    DashGlobal.EditorHelper.GetActiveEditor().Text = File.ReadAllText(file);
                 }
             }
         }
@@ -603,8 +597,6 @@ namespace Dash
 
                 // Reopen from file
                 DashGlobal.TabsHelper.CreateTabOpenFile(sfd.FileName);
-                DashGlobal.EditorHelper.GetActiveEditor().Text = File.ReadAllText(sfd.FileName);
-                DashGlobal.TabsHelper.SetSelectedTabClean();
             }
         }
 
@@ -648,7 +640,6 @@ namespace Dash
 
                         // Reopen from file
                         DashGlobal.TabsHelper.CreateTabOpenFile(sfd.FileName);
-                        DashGlobal.EditorHelper.GetActiveEditor().Text = File.ReadAllText(sfd.FileName);
                     }
                 }
                 else
@@ -753,7 +744,6 @@ namespace Dash
             Settings.Default.Save();
         }
 
-
         private void logStackTraceToolStripMenuItem_Click(object sender, EventArgs e)
         {
             // Not going to work as the stack trace only includes user clicking "dump stack trace"
@@ -762,7 +752,14 @@ namespace Dash
             Process.Start("https://github.com/nevadascout/Dash/issues/new");
         }
 
+        private void sendFeedbackToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            Process.Start("http://dash.nevadascout.com/feedback");
+        }
+
         #endregion
+
+
 
         private void mainTabControl_MouseUp(object sender, MouseEventArgs e)
         {
@@ -781,12 +778,8 @@ namespace Dash
             }
         }
 
-        private void sendFeedbackToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            Process.Start("http://dash.nevadascout.com/feedback");
-        }
-
     }
+
 
     class WorkerObject
     {

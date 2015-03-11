@@ -78,7 +78,6 @@ namespace Dash
         }
 
 
-
         public FastColoredTextBox CreateEditor(string filePath = "")
         {
             var fctb = new FastColoredTextBox
@@ -90,14 +89,13 @@ namespace Dash
                 AutoIndentChars = Settings.Default.EnableAutoIndentation,
                 AutoIndentExistingLines = Settings.Default.EnableAutoIndentation,
                 WordWrap = Settings.Default.EnableLineWrapping,
-                WordWrapAutoIndent = false,
-                //WordWrapMode = WordWrapMode.WordWrapPreferredWidth,
 
+                WordWrapAutoIndent = false,
                 AllowDrop = true,
 
                 AllowMacroRecording = false,
                 AutoCompleteBrackets = true,
-                AutoCompleteBracketsList = new char[] { '{', '}', '(', ')', '[', ']', '"', '"', '\'', '\'' },
+                AutoCompleteBracketsList = new[] { '{', '}', '(', ')', '[', ']', '"', '"', '\'', '\'' },
                 CaretColor = Color.Navy,
                 CurrentLineColor = Color.CadetBlue,
                 LeftPadding = 15,
@@ -128,8 +126,6 @@ namespace Dash
             fctb.DragDrop += TextAreaDragDrop;
             fctb.DragEnter += TextAreaDragEnter;
 
-            //fctb.OpenFile(filePath);
-
             return fctb;
         }
 
@@ -153,38 +149,38 @@ namespace Dash
 
             var range = forceRefresh ? editor.Range : e.ChangedRange;
 
-            //clear style of changed range
+            // Clear style of changed range
             range.ClearStyle(blueStyle, boldStyle, grayStyle, magentaStyle, greenStyle, stringStyle, maroonStyle);
 
 
-            //comment highlighting
+            // Comment highlighting
             range.SetStyle(greenStyle, @"//.*$", RegexOptions.Multiline);
             range.SetStyle(greenStyle, @"(/\*.*?\*/)|(/\*.*)", RegexOptions.Singleline);
             range.SetStyle(greenStyle, @"(/\*.*?\*/)|(.*\*/)", RegexOptions.Singleline | RegexOptions.RightToLeft);
 
-            //string highlighting
+            // String highlighting
             range.SetStyle(stringStyle, @"""""|@""""|''|@"".*?""|(?<!@)(?<range>"".*?[^\\]"")|'.*?[^\\]'");
 
-            //number highlighting
+            // Number highlighting
             range.SetStyle(magentaStyle, @"\b\d+[\.]?\d*([eE]\-?\d+)?[lLdDfF]?\b|\b0x[a-fA-F\d]+\b");
 
-            //attribute highlighting
+            // Attribute highlighting
             //range.SetStyle(GrayStyle, @"^\s*(?<range>\[.+?\])\s*$", RegexOptions.Multiline);
 
-            //class name highlighting
+            // Class name highlighting
             //range.SetStyle(BoldStyle, @"\b(class|struct|enum|interface)\s+(?<range>\w+?)\b");
 
-            //keyword highlighting
+            // Keyword highlighting
             //range.SetStyle(BlueStyle, @"\b(abstract|as|base|bool|break|byte|case|catch|char|checked|class|const|continue|decimal|default|delegate|do|double|else|enum|event|explicit|extern|false|finally|fixed|float|for|foreach|goto|if|implicit|in|int|interface|internal|is|lock|long|namespace|new|null|object|operator|out|override|params|private|protected|public|readonly|ref|return|sbyte|sealed|short|sizeof|stackalloc|static|string|struct|switch|this|throw|true|try|typeof|uint|ulong|unchecked|unsafe|ushort|using|virtual|void|volatile|while|add|alias|ascending|descending|dynamic|from|get|global|group|into|join|let|orderby|partial|remove|select|set|value|var|where|yield)\b|#region\b|#endregion\b");
 
             // Clear styling inside comments
             //foreach (Range r in editor.GetRanges(@"^\s*//.*$", RegexOptions.Multiline))
-           // {
-           //     r.ClearStyle(StyleIndex.All);
+            //{
+            //    r.ClearStyle(StyleIndex.All);
             //    r.SetStyle(greenStyle);
-           // }
+            //}
 
-            // SQF Specific Keywords
+            // SQF specific keywords
             range.SetStyle(blueStyle, @"\b(true|false|null|if|then|else|this|while|for|do|foreach|boolean)\b");
             range.SetStyle(maroonStyle, @"\b(abs|accTime|acos|action|actionKeys|actionKeysImages|actionKeysNames|actionKeysNamesArray|actionName|activateAddons|activatedAddons|activateKey|addAction|addBackpack|addBackpackCargo|addBackpackCargoGlobal|addBackpackGlobal|addCamShake|addCuratorAddons|addCuratorCameraArea|addCuratorEditableObjects|addCuratorEditingArea|addCuratorPoints|addEditorObject|addEventHandler|addGoggles|addGroupIcon|addHandgunItem|addHeadgear|addItem|addItemCargo|addItemCargoGlobal|addItemPool|addItemToBackpack|addItemToUniform|addItemToVest|addLiveStats|addMagazine|addMagazine array|addMagazineAmmoCargo|addMagazineCargo|addMagazineCargoGlobal|addMagazineGlobal|addMagazinePool|addMagazines|addMagazineTurret|addMenu|addMenuItem|addMissionEventHandler|addMPEventHandler|addMusicEventHandler|addPrimaryWeaponItem|addPublicVariableEventHandler|addRating|addResources|addScore|addScoreSide|addSecondaryWeaponItem|addSwitchableUnit|addTeamMember|addToRemainsCollector|addUniform|addVehicle|addVest|addWaypoint|addWeapon|addWeaponCargo|addWeaponCargoGlobal|addWeaponGlobal|addWeaponPool|addWeaponTurret|agent|agents|aimedAtTarget|aimPos|airDensityRTD|airportSide|AISFinishHeal|alive|allControls|allCurators|allDead|allDeadMen|allDisplays|allGroups|allMapMarkers|allMines|allMissionObjects|allow3DMode|allowCrewInImmobile|allowCuratorLogicIgnoreAreas|allowDamage|allowDammage|allowFileOperations|allowFleeing|allowGetIn|allSites|allTurrets|allUnits|allUnitsUAV|allVariables|ammo|and|animate|animateDoor|animationPhase|animationState|armoryPoints|asin|ASLToATL|assert|assignAsCargo|assignAsCargoIndex|assignAsCommander|assignAsDriver|assignAsGunner|assignAsTurret|assignCurator|assignedCargo|assignedCommander|assignedDriver|assignedGunner|assignedItems|assignedTarget|assignedTeam|assignedVehicle|assignedVehicleRole|assignItem|assignTeam|assignToAirport|atan|atan2|atg|ATLToASL|attachedObject|attachedObjects|attachedTo|attachObject|attachTo|attackEnabled|backpack|backpackCargo|backpackContainer|backpackItems|backpackMagazines|backpackSpaceFor|batteryChargeRTD|behaviour|benchmark|binocular|blufor|boundingBox|boundingBoxReal|boundingCenter|breakOut|breakTo|briefingName|buildingExit|buildingPos|buldozer LoadNewRoads|buldozer reloadOperMap|buttonAction|buttonSetAction|cadetMode|call|callExtension|camCommand|camCommit|camCommitPrepared|camCommitted|camConstuctionSetParams|camCreate|camDestroy|cameraEffect|cameraEffectEnableHUD|cameraInterest|cameraOn|cameraView|campaignConfigFile|camPreload|camPreloaded|camPrepareBank|camPrepareDir|camPrepareDive|camPrepareFocus|camPrepareFov|camPrepareFovRange|camPreparePos|camPrepareRelPos|camPrepareTarget|camSetBank|camSetDir|camSetDive|camSetFocus|camSetFov|camSetFovRange|camSetPos|camSetRelPos|camSetTarget|camTarget|camUseNVG|canAdd|canAddItemToBackpack|canAddItemToUniform|canAddItemToVest|cancelSimpleTaskDestination|canFire|canMove|canSlingLoad|canStand|canUnloadInCombat|captive|captiveNum|case|catch|cbChecked|cbSetChecked|ceil|CfgWeapons drySound|cheatsEnabled|checkAIFeature|civilian|className|clearAllItemsFromBackpack|clearBackpackCargo|clearBackpackCargoGlobal|clearGroupIcons|clearItemCargo|clearItemCargoGlobal|clearItemPool|clearMagazineCargo|clearMagazineCargoGlobal|clearMagazinePool|clearOverlay|clearRadio|clearVehicleInit|clearWeaponCargo|clearWeaponCargoGlobal|clearWeaponPool|closeDialog|closeDisplay|closeOverlay|collapseObjectTree|collectiveRTD|combatMode|commandArtilleryFire|commandChat|commander|commandFire|commandFollow|commandFSM|commandGetOut|commandingMenu|commandMove|commandRadio|commandStop|commandTarget|commandWatch|comment|commitOverlay|compile|compileFinal|completedFSM|composeText|configClasses|configFile|configName|configProperties|connectTerminalToUAV|controlNull|copyFromClipboard|copyToClipboard|copyWaypoints|cos|count)\b");
             range.SetStyle(maroonStyle, @"\b(countEnemy|countFriendly|countSide|countType|countUnknown|createAgent|createCenter|createDialog|createDiaryLink|createDiaryRecord|createDiarySubject|createDisplay|createGearDialog|createGroup|createGuardedPoint|createLocation|createMarker|createMarkerLocal|createMenu|createMine|createMissionDisplay|createSimpleTask|createSite|createSoundSource|createTarget|createTask|createTeam|createTrigger|createUnit|createUnit array|createVehicle|createVehicle array|createVehicleCrew|createVehicleLocal|crew|ctrlActivate|ctrlAddEventHandler|ctrlAutoScrollDelay|ctrlAutoScrollRewind|ctrlAutoScrollSpeed|ctrlChecked|ctrlClassName|ctrlCommit|ctrlCommitted|ctrlCreate|ctrlDelete|ctrlEnable|ctrlEnabled|ctrlFade|ctrlHTMLLoaded|ctrlIDC|ctrlIDD|ctrlMapAnimAdd|ctrlMapAnimClear|ctrlMapAnimCommit|ctrlMapAnimDone|ctrlMapCursor|ctrlMapMouseOver|ctrlMapScale|ctrlMapScreenToWorld|ctrlMapWorldToScreen|ctrlModel|ctrlModelDirAndUp|ctrlModelScale|ctrlParent|ctrlPosition|ctrlRemoveAllEventHandlers|ctrlRemoveEventHandler|ctrlScale|ctrlSetActiveColor|ctrlSetAutoScrollDelay|ctrlSetAutoScrollRewind|ctrlSetAutoScrollSpeed|ctrlSetBackgroundColor|ctrlSetChecked|ctrlSetEventHandler|ctrlSetFade|ctrlSetFocus|ctrlSetFont|ctrlSetFontH1|ctrlSetFontH1B|ctrlSetFontH2|ctrlSetFontH2B|ctrlSetFontH3|ctrlSetFontH3B|ctrlSetFontH4|ctrlSetFontH4B|ctrlSetFontH5|ctrlSetFontH5B|ctrlSetFontH6|ctrlSetFontH6B|ctrlSetFontHeight|ctrlSetFontHeightH1|ctrlSetFontHeightH2|ctrlSetFontHeightH3|ctrlSetFontHeightH4|ctrlSetFontHeightH5|ctrlSetFontHeightH6|ctrlSetFontP|ctrlSetFontPB|ctrlSetForegroundColor|ctrlSetModel|ctrlSetModelDirAndUp|ctrlSetModelScale|ctrlSetPosition|ctrlSetScale|ctrlSetStructuredText|ctrlSetText|ctrlSetTextColor|ctrlSetTooltip|ctrlSetTooltipColorBox|ctrlSetTooltipColorShade|ctrlSetTooltipColorText|ctrlShow|ctrlShown|ctrlText|ctrlTextHeight|ctrlType|ctrlVisible|curatorAddons|curatorCamera|curatorCameraArea|curatorCameraAreaCeiling|curatorCoef|curatorEditableObjects|curatorEditingArea|curatorEditingAreaType|curatorMouseOver|curatorPoints|curatorRegisteredObjects|curatorSelected|curatorWaypointCost|currentCommand|currentMagazine|currentMagazineDetail|currentMagazineDetailTurret|currentMagazineTurret|currentMuzzle|currentTask|currentTasks|currentVisionMode|currentWaypoint|currentWeapon|currentWeaponMode|currentWeaponTurret|currentZeroing|cursorTarget|customChat|customRadio|cutFadeOut|cutObj|cutRsc|cutText|damage|date|dateToNumber|daytime|deActivateKey|debriefingText|debugFSM|debugLog|default|deg|deleteAt|deleteCenter|deleteCollection|deleteEditorObject|deleteGroup|deleteIdentity|deleteLocation|deleteMarker|deleteMarkerLocal|deleteRange|deleteResources|deleteSite|deleteStatus|deleteTarget|deleteTeam|deleteVehicle|deleteVehicleCrew|deleteWaypoint|detach|detectedMines|diag captureFrame|diag captureSlowFrame|diag fps|diag fpsmin|diag frameno|diag log|diag logSlowFrame|diag tickTime|dialog|diarySubjectExists|difficulty|difficultyEnabled|difficultyEnabledRTD|direction|directSay|disableAI|disableCollisionWith|disableConversation|disableDebriefingStats|disableSerialization|disableTIEquipment|disableUAVConnectability|disableUserInput|displayAddEventHandler|displayCtrl|displayNull|displayRemoveAllEventHandlers|displayRemoveEventHandler|displaySetEventHandler|dissolveTeam|distance|distanceSqr|distributionRegion|do|doArtilleryFire|for do|doFire|doFollow|doFSM|doGetOut|doMove|doorPhase|doStop|doTarget|doWatch|drawArrow|drawEllipse|drawIcon|drawIcon3D|drawLine|drawLine3D|drawLink|drawLocation|drawRectangle|driver|drop|drySound CfgWeapons|east|echo|editObject|editorSetEventHandler|effectiveCommander|emptyPositions|enableAI|enableAIFeature|enableAttack|enableAutoStartUpRTD|enableAutoTrimRTD|enableCamShake|enableCaustics|enableCollisionWith|enableCoPilot|enableCopilot|enableDebriefingStats)\b");
@@ -193,7 +189,6 @@ namespace Dash
             range.SetStyle(maroonStyle, @"\b(publicVariable|publicVariableClient|publicVariableServer|pushBack|putWeaponPool|queryItemsPool|queryMagazinePool|queryWeaponPool|rad|radioChannelAdd|radioChannelCreate|radioChannelRemove|radioChannelSetCallSign|radioChannelSetLabel|radioVolume|rain|rainbow|random|rank|rankId|rating|rectangular|registeredTasks|registerTask|reload|reloadEnabled|remoteControl|removeAction|removeAllActions|removeAllAssignedItems|removeAllContainers|removeAllCuratorAddons|removeAllCuratorCameraAreas|removeAllCuratorEditingAreas|removeAllEventHandlers|removeAllHandgunItems|removeAllItems|removeAllItemsWithMagazines|removeAllMissionEventHandlers|removeAllMPEventHandlers|removeAllMusicEventHandlers|removeAllPrimaryWeaponItems|removeAllWeapons|removeBackpack|removeBackpackGlobal|removeClothing|removeCuratorAddons|removeCuratorCameraArea|removeCuratorEditableObjects|removeCuratorEditingArea|removeDrawIcon|removeDrawLinks|removeEventHandler|removeFromRemainsCollector|removeGoggles|removeGroupIcon|removeHandgunItem|removeHeadgear|removeItem|removeItemFromBackpack|removeItemFromUniform|removeItemFromVest|removeItems|removeMagazine|removeMagazineGlobal|removeMagazines|removeMagazinesTurret|removeMagazineTurret|removeMenuItem|removeMissionEventHandler|removeMPEventHandler|removeMusicEventHandler|removePrimaryWeaponItem|removeSecondaryWeaponItem||removeSimpleTask|removeSwitchableUnit|removeTeamMember|removeUniform|removeVest|removeWeapon|removeWeaponGlobal|removeWeaponTurret|requiredVersion|resetCamShake|resetSubgroupDirection|resistance|resize|resources|respawnVehicle|restartEditorCamera|reveal|revealMine|reverse|reversedMouseY|roadsConnectedTo|ropeAttachedObjects|ropeAttachedTo|ropeAttachEnabled|ropeAttachTo|ropeCreate|ropeCut|ropeDestroy|ropeDetach|ropeEndPosition|ropeLength|ropes|ropeSetCargoMass|ropeUnwind|ropeUnwound|rotorsForcesRTD|rotorsRpmRTD|round|runInitScript|safeZoneH|safeZoneW|safeZoneWAbs|safeZoneX|safeZoneXAbs|safeZoneY|saveGame|saveIdentity|saveJoysticks|saveOverlay|saveProfileNamespace|saveStatus|saveVar|savingEnabled|say|say2D|say3D|scopeName|score|scoreSide|screenToWorld|scriptDone|scriptName|scriptNull|scudState|secondaryWeapon|secondaryWeaponItems|secondaryWeaponMagazine|select|selectBestPlaces|selectDiarySubject|selectedEditorObjects|selectEditorObject|selectionPosition|selectLeader|selectNoPlayer|selectPlayer|selectWeapon|selectWeaponTurret|sendAUMessage|sendSimpleCommand|sendTask|sendTaskResult|sendUDPMessage|serverCommand|serverCommandAvailable|serverCommandExecutable|serverTime|set|setAccTime|setActualCollectiveRTD|setAirportSide|setAmmo|setAmmoCargo|setAperture|setApertureNew|setAPURTD|setArmoryPoints|setAttributes|setAutonomous|setBatteryChargeRTD|setBatteryRTD|setBehaviour|setBleedingRemaining|setBrakesRTD|setCameraEffect|setCameraInterest|setCamShakeDefParams|setCamShakeParams|setCamUseTi|setCaptive|setCenterOfMass|setCollisionLight|setCombatMode|setCompassOscillation|setCuratorCameraAreaCeiling|setCuratorCoef|setCuratorEditingAreaType|setCuratorWaypointCost|setCurrentTask|setCurrentWaypoint|setCustomWeightRTD|setDamage|setDammage|setDate|setDebriefingText|setDefaultCamera|setDestination|setDetailMapBlendPars|setDir|setDirection|setDrawIcon|setDropInterval|setEditorMode|setEditorObjectScope|setEffectCondition|setEngineRPMRTD|setFace|setFaceAnimation|setFatigue|setFlagOwner|setFlagSide|setFlagTexture|setFog|setFog array|setFormation|setFormationTask|setFormDir|setFriend|setFromEditor|setFSMVariable|setFuel|setFuelCargo|setGroupIcon|setGroupIconParams|setGroupIconsSelectable|setGroupIconsVisible|setGroupId|setGusts|setHideBehind|setHit|setHitPointDamage|setHorizonParallaxCoef|setHUDMovementLevels|setIdentity|setImportance|setLeader|setLightAmbient|setLightAttenuation|setLightBrightness|setLightColor|setLightDayLight|setLightFlareMaxDistance)\b");
             range.SetStyle(maroonStyle, @"\b(setLightFlareSize|setLightIntensity|setLightnings|setLightUseFlare|setLocalWindParams|setMagazineTurretAmmo|setMarkerAlpha|setMarkerAlphaLocal|setMarkerBrush|setMarkerBrushLocal|setMarkerColor|setMarkerColorLocal|setMarkerDir|setMarkerDirLocal|setMarkerPos|setMarkerPosLocal|setMarkerShape|setMarkerShapeLocal|setMarkerSize|setMarkerSizeLocal|setMarkerText|setMarkerTextLocal|setMarkerType|setMarkerTypeLocal|setMass|setMimic|setMousePosition|setMusicEffect|setMusicEventHandler|setName|setNameSound|setObjectArguments|setObjectMaterial|setObjectProxy|setObjectTexture|setObjectTextureGlobal|setObjectViewDistance|setOvercast|setOwner|setOxygenRemaining|setParticleCircle|setParticleClass|setParticleFire|setParticleParams|setParticleRandom|setPilotLight|setPiPEffect|setPitch|setPlayable|setPlayerRespawnTime|setPos|setPosASL|setPosASL2|setPosASLW|setPosATL|setPosition|setPosWorld|setRadioMsg|setRain|setRainbow|setRandomLip|setRank|setRectangular|setRepairCargo|setRotorBrakeRTD|setShadowDistance|setSide|setSimpleTaskDescription|setSimpleTaskDestination|setSimpleTaskTarget|setSimulWeatherLayers|setSize|setSkill|setSkill array|setSlingLoad|setSoundEffect|setSpeaker|setSpeech|setSpeedMode|setStarterRTD|setStatValue|setSystemOfUnits|setTargetAge|setTaskResult|setTaskState|setTerrainGrid|setText|setThrottleRTD|setTimeMultiplier|setTitleEffect|setToneMapping|setToneMappingParams|setTrafficDensity|setTrafficDistance|setTrafficGap|setTrafficSpeed|setTriggerActivation|setTriggerArea|setTriggerStatements|setTriggerText|setTriggerTimeout|setTriggerType|setType|setUnconscious|setUnitAbility|setUnitPos|setUnitPosWeak|setUnitRank|setUnitRecoilCoefficient|setUserActionText|setVariable|setVectorDir|setVectorDirAndUp|setVectorUp|setVehicleAmmo|setVehicleAmmoDef|setVehicleArmor|setVehicleId|setVehicleInit|setVehicleLock|setVehiclePosition|setVehicleTiPars|setVehicleVarName|setVelocity|setVelocityTransformation|setViewDistance|setVisibleIfTreeCollapsed|setWantedRPMRTD|setWaves|setWaypointBehaviour|setWaypointCombatMode|setWaypointCompletionRadius|setWaypointDescription|setWaypointFormation|setWaypointHousePosition|setWaypointLoiterRadius|setWaypointLoiterType|setWaypointName|setWaypointPosition|setWaypointScript|setWaypointSpeed|setWaypointStatements|setWaypointTimeout|setWaypointType|setWaypointVisible|setWeaponReloadingTime|setWind|setWindDir|setWindForce|setWindStr|setWPPos|show3DIcons|showChat|showCinemaBorder|showCommandingMenu|showCompass|showCuratorCompass|showGPS|showHUD|showLegend|showMap|shownArtilleryComputer|shownChat|shownCompass|shownCuratorCompass|showNewEditorObject|shownGPS|shownMap|shownPad|shownRadio|shownUAVFeed|shownWarrant|shownWatch|showPad|showRadio|showSubtitles|showUAVFeed|showWarrant|showWatch|showWaypoint|side|side location|sideChat|sideEnemy|sideFriendly|sideLogic|sideRadio|sideUnknown|simpleTasks|simulationEnabled|simulCloudDensity|simulCloudOcclusion|simulInClouds|simulSetHumidity|simulWeatherSync|sin|size|sizeOf|skill|skillFinal|skill vehicle|skipTime|sleep|sliderPosition|sliderRange|sliderSetPosition|sliderSetRange|sliderSetSpeed|sliderSpeed|slingLoadAssistantShown|soldierMagazines|someAmmo|soundVolume|spawn|speaker|speed|speedMode|sqrt|squadParams|stance|startLoadingScreen|step|stop|stopped|str|sunOrMoon|supportInfo|suppressFor|surfaceIsWater|surfaceNormal|surfaceType|swimInDepth|switch|switch do|switchableUnits|switchAction|switchCamera|switchGesture|switchLight|switchMove|synchronizedObjects|synchronizedTriggers|synchronizedWaypoints|synchronizeObjectsAdd|synchronizeObjectsRemove|synchronizeTrigger|synchronizeWaypoint|synchronizeWaypoint trigger|systemChat|systemOfUnits|tan|targetsAggregate|targetsQuery|taskChildren|taskCompleted|taskDescription|taskDestination|taskHint|taskNull|taskParent|taskResult|taskState|teamMember)\b");
             range.SetStyle(maroonStyle, @"\b(teamMemberNull|teamName|teams|teamSwitch|teamSwitchEnabled|teamType|terminate|terrainIntersect|terrainIntersectASL|text|text location|textLog|textLogFormat|tg|throttleRTD|throw|time|timeMultiplier|titleCut|titleFadeOut|titleObj|titleRsc|titleText|to|toArray|toLower|toString|toUpper|triggerActivated|triggerActivation|triggerArea|triggerAttachedVehicle|triggerAttachObject|triggerAttachVehicle|triggerStatements|triggerText|triggerTimeout|triggerTimeoutCurrent|triggerType|try|turretLocal|turretOwner|turretUnit|tvAdd|tvClear|tvCollapse|tvCount|tvCurSel|tvData|tvDelete|tvExpand|tvPicture|tvSetCurSel|tvSetData|tvSetPicture|tvSetValue|tvSort|tvSortByValue|tvText|tvValue|type|typeName|typeOf|UAVControl|uiNamespace|uiSleep|unassignCurator|unassignItem|unassignTeam|unassignVehicle|underwater|uniform|uniformContainer|uniformItems|uniformMagazines|unitAddons|unitBackpack|unitPos|unitReady|unitRecoilCoefficient|units|unitsBelowHeight|unlinkItem|unlockAchievement|unregisterTask|updateDrawIcon|updateMenuItem|updateObjectTree|useAudioTimeForMoves|vectorAdd|vectorCos|vectorCrossProduct|vectorDiff|vectorDir|vectorDirVisual|vectorDistance|vectorDistanceSqr|vectorDotProduct|vectorFromTo|vectorMagnitude|vectorMagnitudeSqr|vectorMultiply|vectorNormalized|vectorUp|vectorUpVisual|vehicle|vehicleChat|vehicleRadio|vehicles|vehicleVarName|velocity|velocityModelSpace|verifySignature|vest|vestContainer|vestItems|vestMagazines|viewDistance|visibleCompass|visibleGPS|visibleMap|visiblePosition|visiblePositionASL|visibleWatch|waitUntil|waves|waypointAttachedObject|waypointAttachedVehicle|waypointAttachObject|waypointAttachVehicle|waypointBehaviour|waypointCombatMode|waypointCompletionRadius|waypointDescription|waypointFormation|waypointHousePosition|waypointLoiterRadius|waypointLoiterType|waypointName|waypointPosition|waypoints|waypointScript|waypointShow|waypointSpeed|waypointStatements|waypointTimeout|waypointTimeoutCurrent|waypointType|waypointVisible|weaponAccessories|weaponCargo|weaponDirection|weaponLowered|weapons|weaponsItems|weaponsItemsCargo|weaponState|weaponsTurret|weightRTD|west|WFSideText|while|wind|windDir|windStr|with|worldName|worldToModel|worldToModelVisual|worldToScreen|diag_log|_unit|_target|_this|ATLToASL|ATLtoASL|getVariable|getPlayerUID|getPlayerUIDOld|format|formatText|getPos|getDir|headgear|goggles|hint)\b");
-
 
             // Set anything else to bold as they're probably variables
             range.SetStyle(boldStyle, @"\w", RegexOptions.Singleline);
@@ -204,6 +199,7 @@ namespace Dash
         {
             switch (lang)
             {
+                // TODO -- handle .ext .cfg
                 case "sqm":
                 case "sqs":
                 case "sqf":
@@ -221,14 +217,11 @@ namespace Dash
             }
         }
 
-
         public AutocompleteMenu CreateArmaSense()
         {
             var editor = MainTabControl.SelectedTab.Controls[0] as FastColoredTextBox;
 
-            //AutocompleteMenu armaSense = new AutocompleteMenu(editor) { SearchPattern = @"[\w\.:=!<>]", AllowTabKey = true };
-            
-            // Clear out the old Arma Sense
+            // Clear out any old ArmaSense instances
             ArmaSense = null;
             ArmaSense = new AutocompleteMenu(editor)
             {
@@ -272,13 +265,14 @@ namespace Dash
 
             foreach (var item in UserVariablesCurrentFile)
                 items.Add(new AutocompleteItem(item.VarName) { ImageIndex = 1, ToolTipTitle = item.TooltipTitle, ToolTipText = item.TooltipText });
-            
-            // BACKUP !
+
+            #region Foreach backup
             //foreach (var item in userVariables)
             //    items.Add(new AutocompleteItem(item) { ImageIndex = 1 });
 
             //foreach (var item in methods)
             //    items.Add(new MethodAutocompleteItem(item) { ImageIndex = 2 });
+            #endregion
 
             items.AddRange(ArmaSenseKeywords);
 
@@ -286,9 +280,9 @@ namespace Dash
             items.Add(new InsertSpaceSnippet(@"^(\w+)([=<>!:]+)(\w+)$"));
             items.Add(new InsertEnterSnippet());
 
-            // Set as autocomplete source
             try
             {
+                // Set as autocomplete source
                 armaSense.Items.SetAutocompleteItems(items);
             }
             catch (Exception ex)
@@ -296,24 +290,21 @@ namespace Dash
                 Logger.Log(ex.Message);
             }
 
-            // Update property
             ArmaListItemsCount = items.Count;
         }
 
         public void UpdateUserVariables(DoWorkEventArgs loadUserVarsBwDoWork, RunWorkerCompletedEventArgs loadUserVarsBwRunWorkerCompleted)
         {
-           
         }
 
         public string GetVarTypeFromString(string varContents)
         {
             if (
                 (varContents.StartsWith("\"") && varContents.EndsWith("\"")) ||
-                varContents.StartsWith("str") ||
-                varContents.Contains("formatText")
+                 varContents.StartsWith("str") ||
+                 varContents.Contains("formatText")
                ) return "String";
 
-            //if (varContents.StartsWith("[") && varContents.EndsWith("]")) return "Array";
             if (varContents.StartsWith("[")) return "Array";
 
             if (varContents.StartsWith("{")) return "Inline Function";
@@ -352,6 +343,7 @@ namespace Dash
         }
 
 
+        #region Code Snippets -- not currently used
 
         /// <summary>
         /// This item appears when any part of snippet text is typed
@@ -476,5 +468,7 @@ namespace Dash
                 }
             }
         }
+
+        #endregion
     }
 }
