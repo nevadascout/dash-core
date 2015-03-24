@@ -215,6 +215,13 @@ namespace Dash
                 default:
                     break;
             }
+
+            // Force highlighting in the tutorial file
+
+            //if (MainTabControl.SelectedTab.Text == "tutorial.txt")
+            //{
+            //    this.SqfHighlight(this.GetActiveEditor(), e, forceRefresh);
+            //}
         }
 
         public AutocompleteMenu CreateArmaSense()

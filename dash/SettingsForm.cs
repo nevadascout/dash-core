@@ -63,6 +63,8 @@ namespace Dash
 
         private void btnSave_Click(object sender, System.EventArgs e)
         {
+            MessageBox.Show("You must restart Dash for your setting changes to take affect.");
+
             Properties.Settings.Default.Save();
             this.Close();
         }

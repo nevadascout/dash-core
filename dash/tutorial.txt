@@ -1,0 +1,118 @@
+﻿
+ ## Welcome to Dash!
+
+    This quick help guide will get you well under way to writing SQF code like an awesome-sqf-writing-guy/girl.
+
+
+ # Keyboard Shortcuts
+
+     Dash supports all the standard commands from "Ctrl + C" to copy, to "Ctrl + O" to open a file.
+     However, there are a few extra ones you should know about:
+
+     - Ctrl + /					Comment/uncomment current or selected lines
+     - Ctrl + Shift +O			Open folder in treeview
+     - Ctrl + I					Auto-format current line
+	 - Ctrl + W					Close current tab
+     - F12						Lookup selected word on Bohemia Wiki
+
+     - Ctrl + Space				Open ArmaSense auto-complete menu
+     - Ctrl + Shift + R			Rebuild ArmaSense cache (if the ArmaSense menu stops appearing, this will normally fix it)
+
+     - Alt + Up Arrow Key		Move current or selected lines up
+     - Alt + Down Arrow Key		Move current or selected lines down
+
+
+ # ArmaSense				
+ 
+     ArmaSense is the Dash SQF code-completion engine. It runs as you type and suggests a list Arma commands 
+     relevant to what you're currently typing. 
+     It also suggests variables that you have declared in the current file.
+
+     You can accept ArmaSense suggestions by pressing the Tab or Enter keys. The up/down arrow keys can be used
+     to select an item from the list.
+
+     Try it out now! Start typing "call compile preprocessfilelinenumbers" on the line below:
+
+
+	 Now try declaring a variable (eg. "MyVar = "test";), then try calling it on the line below:
+
+
+
+ # Usage Hints / Tips
+
+    - Press Ctrl + Shift + O to select a folder to load into the treeview (the right hand pane).
+	- Middle click a tab to close it.
+	- Select an SQF command (eg. "call", "compile") and press F12 to view that command on the Bohemia wiki.
+	- Some options can be confiured in the Edit -> Settings menu.
+	
+	- Drag a file from a folder into the editor pane to open it
+	- Press Ctrl + D to duplicate a line (WARNING: this is buggy and will empty your clipboard)
+
+	- Dash does not prompt you to save a changed file if you close the window
+
+	- You can use "//#region" and "//#endregion" to define collapseable regions in your code
+
+ 
+ # Known Bugs
+
+	- Opening large files in lots of tabs may cause performance issues
+	- ArmaSense can be broken in some cases when opening files. 
+	  TO FIX THIS: Open another file, then press Ctrl + Shift + R, then go back to the original file
+	- Dash does not currently indicate if a file is "dirty" (has been changed), but it will always prompt
+	  you to save it if it is different from it's original content.
+	- The "Save As" feature creates an empty tab on save
+	- Opening Dash with some saved tabs sometimes gives a popup with "Collection was modified. Enumerator may not enumerate"
+
+	- Full list of bugs can be found here: https://github.com/nevadascout/dash-core/labels/bug
+
+
+ # Future Enhancements / Features
+
+	- SQF Lexer/Parser
+	- Improvements to ArmaSense to suggest variables currently in scope instead of just current file
+	  (Including variables in files that aren't currently open)
+
+	- Built-in SQF compiler which will display Microsoft Word style "wavy red underlines" for code that
+	  is not compiling + suggestions on how to fix it
+
+	- PBO Manager
+	- Ability to work directly inside a PBO without needing to pack/unpack (Great for server admins!)
+
+	- RPT File Analyser - to link directly with your source files. Dash can take you directly to the section of code
+	  that has caused the error in the RPT file.
+
+	- Scroll past end of file
+	- Proper C++ syntax highlighting
+	- Improved treeview
+
+
+
+
+ # Full Keyboard Shortcut List
+ 
+  - Ctrl + N				Create new file
+  - Ctrl + O				Open file
+  - Ctrl + S				Save file
+  - Ctrl + Alt + S			Save all open files
+  - Ctrl + /				Comment or uncomment the selected line(s)
+  - Ctrl + F				Find in file
+  - F3						Find next occurance
+  - Ctrl + H				Find and replace
+  - Alt + F, {char}			Find nearest character
+  - Alt + Up				Move current line up
+  - Alt + Down				Move current line down
+  - Ctrl + G				Goto line
+  - Ctrl + U				Convert selection to upper case
+  - Ctrl + Shift + U		Convert selection to lower case
+  
+  - Ctrl + D				Duplicate current line (WARNING: buggy and will empty your clipboard)
+  - Ctrl + I				Auto-format current line
+  - Shift + Del				Delete current line
+  - Ctrl + Up				Scroll up
+  - Ctrl + Down				Scroll down
+  
+  - Ctrl + Space			Open ArmaSense (code suggestion/completion)
+  - Ctrl + Shift + R		Rebuild ArmaSense cache (if the ArmaSense menu stops appearing, this will normally fix it)
+  
+  - F6						Compile current project (load init.sqf and go from there) -> not currently working
+  - F12						Lookup word definition on Bohemia Wiki (will be broken for non Arma related words, eg. hello)
