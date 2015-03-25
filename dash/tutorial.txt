@@ -3,6 +3,8 @@
 
     This quick help guide will get you well under way to writing SQF code like an awesome-sqf-writing-guy/girl.
 
+	To stop this file from opening, simply delete or rename the tutorial.txt in the Dash install directory.
+
 
  # Keyboard Shortcuts
 
@@ -62,6 +64,7 @@
 	  you to save it if it is different from it's original content.
 	- The "Save As" feature creates an empty tab on save
 	- Opening Dash with some saved tabs sometimes gives a popup with "Collection was modified. Enumerator may not enumerate"
+	- Syntax highlighting doesn't work unless a file has been saved with a .sqf file extension
 
 	- Full list of bugs can be found here: https://github.com/nevadascout/dash-core/labels/bug
 
