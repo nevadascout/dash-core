@@ -3,7 +3,7 @@
   <Profiles />
   <Settings>
     <Setting Name="ShowRuler" Type="System.Boolean" Scope="User">
-      <Value Profile="(Default)">True</Value>
+      <Value Profile="(Default)">False</Value>
     </Setting>
     <Setting Name="SplitterWidth" Type="System.Int32" Scope="User">
       <Value Profile="(Default)">712</Value>
