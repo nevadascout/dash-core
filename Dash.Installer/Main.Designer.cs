@@ -231,9 +231,9 @@
             this.label8.AutoSize = true;
             this.label8.Location = new System.Drawing.Point(256, 23);
             this.label8.Name = "label8";
-            this.label8.Size = new System.Drawing.Size(140, 15);
+            this.label8.Size = new System.Drawing.Size(146, 15);
             this.label8.TabIndex = 14;
-            this.label8.Text = "Released: March 3rd 2015";
+            this.label8.Text = "Released: March 24th 2015";
             // 
             // label9
             // 

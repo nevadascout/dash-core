@@ -64,7 +64,7 @@
       <Value Profile="(Default)">False</Value>
     </Setting>
     <Setting Name="AppName" Type="System.String" Scope="User">
-      <Value Profile="(Default)">Dash v1.2 dev alpha</Value>
+      <Value Profile="(Default)">Dash v1.2</Value>
     </Setting>
   </Settings>
 </SettingsFile>

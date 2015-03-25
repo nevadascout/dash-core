@@ -749,12 +749,12 @@ namespace Dash
             // Not going to work as the stack trace only includes user clicking "dump stack trace"
             //Logger.Log("User Requested Stack Trace:");
 
-            Process.Start("https://github.com/nevadascout/Dash/issues/new");
+            Process.Start("https://github.com/nevadascout/Dash/issues");
         }
 
         private void sendFeedbackToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            Process.Start("http://dash.nevadascout.com/feedback");
+            Process.Start("mailto:travis@impactmod.com");
         }
 
         #endregion
@@ -776,6 +776,11 @@ namespace Dash
                 mainTabControl.SelectTab(clickedTab);
                 tabBarContextMenu.Show(clickedTab, pos);
             }
+        }
+
+        private void aboutToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+
         }
 
     }

@@ -6,6 +6,8 @@ using System.IO;
 using System.IO.Compression;
 using System.Net;
 using System.Windows.Forms;
+using IWshRuntimeLibrary;
+using File = System.IO.File;
 
 namespace Dash.Installer
 {
@@ -165,6 +167,9 @@ namespace Dash.Installer
             {
                 // ignored
             }
+
+            // Create desktop shortcut
+            CreateShortcut();
         }
 
         private void copyFilesBw_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
@@ -183,5 +188,25 @@ namespace Dash.Installer
 
         #endregion
 
+        private void CreateShortcut()
+        {
+            string app = "";
+
+            // Add additional backslashes if necessary
+            if (!txtPath.Text.EndsWith("\\"))
+            {
+                app += txtPath.Text + "\\";
+            }
+
+            app += "dash.exe";
+
+            object shDesktop = (object)"Desktop";
+            WshShell shell = new WshShell();
+            string shortcutAddress = (string)shell.SpecialFolders.Item(ref shDesktop) + @"\Dash SQF Editor.lnk";
+            IWshShortcut shortcut = (IWshShortcut)shell.CreateShortcut(shortcutAddress);
+            shortcut.Description = "Dash SQF Editor";
+            shortcut.TargetPath = app;
+            shortcut.Save();
+        }
     }
 }
