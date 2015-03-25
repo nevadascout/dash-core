@@ -168,7 +168,7 @@ namespace Dash.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("True")]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
         public bool EnableSyntaxErrorHighlighting {
             get {
                 return ((bool)(this["EnableSyntaxErrorHighlighting"]));
@@ -247,6 +247,30 @@ namespace Dash.Properties {
             }
             set {
                 this["EnableAutoIndentation"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool EnableLineWrapping {
+            get {
+                return ((bool)(this["EnableLineWrapping"]));
+            }
+            set {
+                this["EnableLineWrapping"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("Dash v1.2 dev alpha")]
+        public string AppName {
+            get {
+                return ((string)(this["AppName"]));
+            }
+            set {
+                this["AppName"] = value;
             }
         }
     }

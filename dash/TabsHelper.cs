@@ -11,14 +11,15 @@ namespace Dash
         private EventHandler TextAreaSelectionChangedDelayed { get; set; }
         public TabControl MainTabControl { get; set; }
 
-        public EditorHelper EditorHelper { get; set; }
+        public DashGlobal DashGlobal { get; set; }
 
-        public TabsHelper(EventHandler<TextChangedEventArgs> textAreaTextChanged, EventHandler textAreaSelectionChangedDelayed, TabControl mainTabControl, EditorHelper editorHelper)
+
+        public TabsHelper(EventHandler<TextChangedEventArgs> textAreaTextChanged, EventHandler textAreaSelectionChangedDelayed, TabControl mainTabControl, DashGlobal dashGlobal)
         {
             MainTabControl = mainTabControl;
             TextAreaSelectionChangedDelayed = textAreaSelectionChangedDelayed;
             TextAreaTextChanged = textAreaTextChanged;
-            EditorHelper = editorHelper;
+            DashGlobal = dashGlobal;
         }
 
 
@@ -28,7 +29,7 @@ namespace Dash
 
             MainTabControl.TabPages.Add(new TabPage(filename) { Name = cleanName });
             MainTabControl.SuspendLayout();
-            MainTabControl.TabPages[cleanName].Controls.Add(EditorHelper.CreateEditor());
+            MainTabControl.TabPages[cleanName].Controls.Add(DashGlobal.EditorHelper.CreateEditor());
             MainTabControl.TabPages[cleanName].Tag = new FileInfo() { Dirty = false };
             MainTabControl.ResumeLayout();
             MainTabControl.SelectTab(cleanName);
@@ -41,12 +42,17 @@ namespace Dash
 
             MainTabControl.TabPages.Add(new TabPage(tabText) { Name = fileToOpen });
             MainTabControl.SuspendLayout();
-            MainTabControl.TabPages[fileToOpen].Controls.Add(EditorHelper.CreateEditor(fileToOpen));
-            MainTabControl.TabPages[fileToOpen].Tag = new FileInfo() { Dirty = true, CrcHash = "TODO" };
+            MainTabControl.TabPages[fileToOpen].Controls.Add(DashGlobal.EditorHelper.CreateEditor(fileToOpen));
             MainTabControl.ResumeLayout();
             MainTabControl.SelectTab(fileToOpen);
 
-            EditorHelper.PerformSyntaxHighlighting(null, FilesHelper.GetLangFromFile(fileToOpen), true);
+            DashGlobal.SetWindowTitle(fileToOpen);
+            Main.Lang = DashGlobal.FilesHelper.GetLangFromFile(fileToOpen);
+
+            DashGlobal.EditorHelper.ActiveEditor.OpenFile(fileToOpen);
+            MainTabControl.TabPages[fileToOpen].Tag = new FileInfo() { Dirty = false, CrcHash = "TODO" };
+
+            DashGlobal.EditorHelper.PerformSyntaxHighlighting(null, Main.Lang, true);
         }
 
 
@@ -54,53 +60,57 @@ namespace Dash
         {
             var tabCount = MainTabControl.TabPages.Count;
             bool closingCurrentTab = (MainTabControl.SelectedTab == tab);
+            var closingTabId = MainTabControl.SelectedIndex;
 
             // Break out if no tab selected
             if (tab == null) return;
+            if (!closingCurrentTab) return;
 
-            // Change tab first to stop title bar flashing up with tab index 0
-            if (!closingCurrentTab && tabCount > 1)
-            {
-                if (MainTabControl.SelectedIndex == (tabCount - 1))
-                {
-                    // Select 
-                    MainTabControl.SelectTab(MainTabControl.TabPages[MainTabControl.SelectedIndex]);
-                }
-                else
-                {
-                    // Select the tab to the right
-                    MainTabControl.SelectTab(MainTabControl.TabPages[MainTabControl.SelectedIndex + 1]);
-                }
-            }
+            // Don't close if the file hasn't been changed from default
+            if (tabCount == 1 && tab.Controls[0].Text == string.Empty) return;
 
             var tag = MainTabControl.SelectedTab.Tag as FileInfo;
 
             if (tag.Dirty)
             {
-                DialogResult  message = MessageBox.Show("This file has been changed. Close without saving?", "Close without saving?", MessageBoxButtons.YesNo);
-
+                DialogResult  message = MessageBox.Show("This file has been modified. Do you want to save it?", "Save file?", MessageBoxButtons.YesNo);
                 if (message == DialogResult.Yes)
                 {
-                    MainTabControl.TabPages.Remove(tab);
-
-                    if (MainTabControl.TabPages.Count == 0)
-                    {
-                        CreateBlankTab(FileType.Other);
-                    }
+                    // TODO -- Add call to filesHelper.SaveFile() to save the file or save as if it hasn't yet been saved
+                    return;
                 }
-
-                // Break out
-                return;
             }
 
+            if (closingTabId == (tabCount - 1))
+            {
+                if (MainTabControl.TabPages.Count == 1)
+                {
+                    MainTabControl.TabPages.Remove(tab);
+                    CreateBlankTab(FileType.Other);
+                    DashGlobal.SetWindowTitle("{new file}");
+                    DashGlobal.EditorHelper.ActiveEditor.Focus();
+                    return;
+                }
+
+                // If we're closing the last tab in the list, select the tab to the left
+                MainTabControl.SelectTab(MainTabControl.TabPages[closingTabId - 1]);
+            }
+            else
+            {
+                // Select the right-most tab
+                MainTabControl.SelectTab(MainTabControl.TabPages[closingTabId + 1]);
+            }
+
+            // Close the tab
             MainTabControl.TabPages.Remove(tab);
 
             if (MainTabControl.TabPages.Count == 0)
             {
                 CreateBlankTab(FileType.Other);
+                DashGlobal.SetWindowTitle("{new file}");
             }
 
-            EditorHelper.ActiveEditor.Focus();
+            DashGlobal.EditorHelper.ActiveEditor.Focus();
         }
 
         public void CloseAllTabsExcept(TabPage tab)
@@ -113,7 +123,6 @@ namespace Dash
                 }
             }
         }
-
 
         public TabPage GetTabByFilename(TabControl mainTabControl, string filename)
         {
@@ -138,7 +147,6 @@ namespace Dash
 
             return page;
         }
-
 
         public void SetSelectedTabDirty()
         {

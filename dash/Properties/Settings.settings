@@ -39,7 +39,7 @@
       <Value Profile="(Default)">True</Value>
     </Setting>
     <Setting Name="EnableSyntaxErrorHighlighting" Type="System.Boolean" Scope="User">
-      <Value Profile="(Default)">True</Value>
+      <Value Profile="(Default)">False</Value>
     </Setting>
     <Setting Name="EnableAutoCompletion" Type="System.Boolean" Scope="User">
       <Value Profile="(Default)">True</Value>
@@ -59,6 +59,12 @@
     </Setting>
     <Setting Name="EnableAutoIndentation" Type="System.Boolean" Scope="User">
       <Value Profile="(Default)">True</Value>
+    </Setting>
+    <Setting Name="EnableLineWrapping" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">False</Value>
+    </Setting>
+    <Setting Name="AppName" Type="System.String" Scope="User">
+      <Value Profile="(Default)">Dash v1.2 dev alpha</Value>
     </Setting>
   </Settings>
 </SettingsFile>

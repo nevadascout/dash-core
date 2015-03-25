@@ -34,6 +34,7 @@
             this.btnCancel = new System.Windows.Forms.Button();
             this.chkShowRuler = new System.Windows.Forms.CheckBox();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.chkEnableLineWrapping = new System.Windows.Forms.CheckBox();
             this.label4 = new System.Windows.Forms.Label();
             this.chkEnableAutoIndentation = new System.Windows.Forms.CheckBox();
             this.chkHighlightSyntaxErrors = new System.Windows.Forms.CheckBox();
@@ -50,6 +51,7 @@
             this.linkLabel2 = new System.Windows.Forms.LinkLabel();
             this.linkLabel1 = new System.Windows.Forms.LinkLabel();
             this.label3 = new System.Windows.Forms.Label();
+            this.lnkResetToDefault = new System.Windows.Forms.LinkLabel();
             this.groupBox1.SuspendLayout();
             this.groupBox2.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.commentEditor)).BeginInit();
@@ -59,7 +61,7 @@
             // btnSave
             // 
             this.btnSave.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnSave.Location = new System.Drawing.Point(311, 436);
+            this.btnSave.Location = new System.Drawing.Point(311, 472);
             this.btnSave.Name = "btnSave";
             this.btnSave.Size = new System.Drawing.Size(193, 37);
             this.btnSave.TabIndex = 0;
@@ -71,7 +73,7 @@
             // 
             this.btnCancel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.btnCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-            this.btnCancel.Location = new System.Drawing.Point(215, 436);
+            this.btnCancel.Location = new System.Drawing.Point(215, 472);
             this.btnCancel.Name = "btnCancel";
             this.btnCancel.Size = new System.Drawing.Size(90, 37);
             this.btnCancel.TabIndex = 1;
@@ -94,6 +96,7 @@
             // 
             // groupBox1
             // 
+            this.groupBox1.Controls.Add(this.chkEnableLineWrapping);
             this.groupBox1.Controls.Add(this.label4);
             this.groupBox1.Controls.Add(this.chkEnableAutoIndentation);
             this.groupBox1.Controls.Add(this.chkHighlightSyntaxErrors);
@@ -104,10 +107,23 @@
             this.groupBox1.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.groupBox1.Location = new System.Drawing.Point(12, 12);
             this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(492, 105);
+            this.groupBox1.Size = new System.Drawing.Size(492, 130);
             this.groupBox1.TabIndex = 4;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Editor Options";
+            // 
+            // chkEnableLineWrapping
+            // 
+            this.chkEnableLineWrapping.AutoSize = true;
+            this.chkEnableLineWrapping.FlatStyle = System.Windows.Forms.FlatStyle.System;
+            this.chkEnableLineWrapping.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.chkEnableLineWrapping.Location = new System.Drawing.Point(344, 100);
+            this.chkEnableLineWrapping.Name = "chkEnableLineWrapping";
+            this.chkEnableLineWrapping.Size = new System.Drawing.Size(142, 20);
+            this.chkEnableLineWrapping.TabIndex = 10;
+            this.chkEnableLineWrapping.Text = "Enable line wrapping";
+            this.chkEnableLineWrapping.UseVisualStyleBackColor = true;
+            this.chkEnableLineWrapping.CheckedChanged += new System.EventHandler(this.chkEnableLineWrapping_CheckedChanged);
             // 
             // label4
             // 
@@ -125,7 +141,7 @@
             this.chkEnableAutoIndentation.AutoSize = true;
             this.chkEnableAutoIndentation.FlatStyle = System.Windows.Forms.FlatStyle.System;
             this.chkEnableAutoIndentation.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.chkEnableAutoIndentation.Location = new System.Drawing.Point(326, 74);
+            this.chkEnableAutoIndentation.Location = new System.Drawing.Point(15, 100);
             this.chkEnableAutoIndentation.Name = "chkEnableAutoIndentation";
             this.chkEnableAutoIndentation.Size = new System.Drawing.Size(160, 20);
             this.chkEnableAutoIndentation.TabIndex = 8;
@@ -136,6 +152,7 @@
             // chkHighlightSyntaxErrors
             // 
             this.chkHighlightSyntaxErrors.AutoSize = true;
+            this.chkHighlightSyntaxErrors.Enabled = false;
             this.chkHighlightSyntaxErrors.FlatStyle = System.Windows.Forms.FlatStyle.System;
             this.chkHighlightSyntaxErrors.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.chkHighlightSyntaxErrors.Location = new System.Drawing.Point(15, 74);
@@ -186,7 +203,7 @@
             this.groupBox2.Controls.Add(this.commentEditor);
             this.groupBox2.Controls.Add(this.chkAutoAddFileCopyrightComment);
             this.groupBox2.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.groupBox2.Location = new System.Drawing.Point(12, 123);
+            this.groupBox2.Location = new System.Drawing.Point(12, 148);
             this.groupBox2.Name = "groupBox2";
             this.groupBox2.Size = new System.Drawing.Size(492, 190);
             this.groupBox2.TabIndex = 5;
@@ -266,7 +283,7 @@
             this.groupBox3.Controls.Add(this.linkLabel2);
             this.groupBox3.Controls.Add(this.linkLabel1);
             this.groupBox3.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.groupBox3.Location = new System.Drawing.Point(12, 319);
+            this.groupBox3.Location = new System.Drawing.Point(12, 344);
             this.groupBox3.Name = "groupBox3";
             this.groupBox3.Size = new System.Drawing.Size(492, 78);
             this.groupBox3.TabIndex = 6;
@@ -330,12 +347,27 @@
             this.label3.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.label3.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label3.ForeColor = System.Drawing.Color.DimGray;
-            this.label3.Location = new System.Drawing.Point(-1, 420);
+            this.label3.Location = new System.Drawing.Point(-1, 456);
             this.label3.Name = "label3";
             this.label3.Padding = new System.Windows.Forms.Padding(20, 25, 0, 0);
             this.label3.Size = new System.Drawing.Size(518, 66);
             this.label3.TabIndex = 7;
             this.label3.Text = "Restart Dash to view changes";
+            // 
+            // lnkResetToDefault
+            // 
+            this.lnkResetToDefault.ActiveLinkColor = System.Drawing.Color.RoyalBlue;
+            this.lnkResetToDefault.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.lnkResetToDefault.AutoSize = true;
+            this.lnkResetToDefault.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lnkResetToDefault.LinkColor = System.Drawing.Color.DimGray;
+            this.lnkResetToDefault.Location = new System.Drawing.Point(9, 431);
+            this.lnkResetToDefault.Name = "lnkResetToDefault";
+            this.lnkResetToDefault.Size = new System.Drawing.Size(90, 15);
+            this.lnkResetToDefault.TabIndex = 12;
+            this.lnkResetToDefault.TabStop = true;
+            this.lnkResetToDefault.Text = "Reset to Default";
+            this.lnkResetToDefault.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.lnkResetToDefault_LinkClicked);
             // 
             // SettingsForm
             // 
@@ -343,7 +375,8 @@
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.CancelButton = this.btnCancel;
-            this.ClientSize = new System.Drawing.Size(516, 485);
+            this.ClientSize = new System.Drawing.Size(516, 521);
+            this.Controls.Add(this.lnkResetToDefault);
             this.Controls.Add(this.groupBox3);
             this.Controls.Add(this.groupBox2);
             this.Controls.Add(this.groupBox1);
@@ -366,6 +399,7 @@
             this.groupBox3.ResumeLayout(false);
             this.groupBox3.PerformLayout();
             this.ResumeLayout(false);
+            this.PerformLayout();
 
         }
 
@@ -391,5 +425,7 @@
         private System.Windows.Forms.LinkLabel linkLabel2;
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.Label label4;
+        private System.Windows.Forms.LinkLabel lnkResetToDefault;
+        private System.Windows.Forms.CheckBox chkEnableLineWrapping;
     }
 }

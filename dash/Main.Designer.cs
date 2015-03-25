@@ -226,6 +226,7 @@
             // compileFileToolStripButton
             // 
             this.compileFileToolStripButton.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.compileFileToolStripButton.Enabled = false;
             this.compileFileToolStripButton.Image = ((System.Drawing.Image)(resources.GetObject("compileFileToolStripButton.Image")));
             this.compileFileToolStripButton.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.compileFileToolStripButton.Name = "compileFileToolStripButton";
@@ -467,6 +468,7 @@
             this.rebuildArmaSenseCacheToolStripMenuItem.ShowShortcutKeys = false;
             this.rebuildArmaSenseCacheToolStripMenuItem.Size = new System.Drawing.Size(218, 22);
             this.rebuildArmaSenseCacheToolStripMenuItem.Text = "Rebuild ArmaSense Cache";
+            this.rebuildArmaSenseCacheToolStripMenuItem.ToolTipText = "Shortcut: Ctrl + Shift + R";
             this.rebuildArmaSenseCacheToolStripMenuItem.Click += new System.EventHandler(this.rebuildArmaSenseCacheToolStripMenuItem_Click);
             // 
             // projectToolStripMenuItem
@@ -479,7 +481,6 @@
             this.unpackPboToolStripMenuItem,
             this.toolStripSeparator7,
             this.projectSettingsToolStripMenuItem});
-            this.projectToolStripMenuItem.Enabled = false;
             this.projectToolStripMenuItem.Name = "projectToolStripMenuItem";
             this.projectToolStripMenuItem.Size = new System.Drawing.Size(56, 20);
             this.projectToolStripMenuItem.Text = "Project";
@@ -487,6 +488,7 @@
             // 
             // addSqfFileToolStripMenuItem
             // 
+            this.addSqfFileToolStripMenuItem.Enabled = false;
             this.addSqfFileToolStripMenuItem.Image = ((System.Drawing.Image)(resources.GetObject("addSqfFileToolStripMenuItem.Image")));
             this.addSqfFileToolStripMenuItem.Name = "addSqfFileToolStripMenuItem";
             this.addSqfFileToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.N)));
@@ -495,6 +497,7 @@
             // 
             // addCppFileToolStripMenuItem
             // 
+            this.addCppFileToolStripMenuItem.Enabled = false;
             this.addCppFileToolStripMenuItem.Image = ((System.Drawing.Image)(resources.GetObject("addCppFileToolStripMenuItem.Image")));
             this.addCppFileToolStripMenuItem.Name = "addCppFileToolStripMenuItem";
             this.addCppFileToolStripMenuItem.Size = new System.Drawing.Size(191, 22);
@@ -507,6 +510,7 @@
             // 
             // packPboToolStripMenuItem
             // 
+            this.packPboToolStripMenuItem.Enabled = false;
             this.packPboToolStripMenuItem.Name = "packPboToolStripMenuItem";
             this.packPboToolStripMenuItem.ShortcutKeys = System.Windows.Forms.Keys.F5;
             this.packPboToolStripMenuItem.Size = new System.Drawing.Size(191, 22);
@@ -514,6 +518,7 @@
             // 
             // unpackPboToolStripMenuItem
             // 
+            this.unpackPboToolStripMenuItem.Enabled = false;
             this.unpackPboToolStripMenuItem.Name = "unpackPboToolStripMenuItem";
             this.unpackPboToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Shift | System.Windows.Forms.Keys.F5)));
             this.unpackPboToolStripMenuItem.Size = new System.Drawing.Size(191, 22);
@@ -526,6 +531,7 @@
             // 
             // projectSettingsToolStripMenuItem
             // 
+            this.projectSettingsToolStripMenuItem.Enabled = false;
             this.projectSettingsToolStripMenuItem.Name = "projectSettingsToolStripMenuItem";
             this.projectSettingsToolStripMenuItem.Size = new System.Drawing.Size(191, 22);
             this.projectSettingsToolStripMenuItem.Text = "Project Settings";
@@ -549,6 +555,7 @@
             // 
             // compileCurrentFileToolStripMenuItem
             // 
+            this.compileCurrentFileToolStripMenuItem.Enabled = false;
             this.compileCurrentFileToolStripMenuItem.Image = ((System.Drawing.Image)(resources.GetObject("compileCurrentFileToolStripMenuItem.Image")));
             this.compileCurrentFileToolStripMenuItem.Name = "compileCurrentFileToolStripMenuItem";
             this.compileCurrentFileToolStripMenuItem.ShortcutKeys = System.Windows.Forms.Keys.F6;
@@ -582,7 +589,6 @@
             // 
             // dashWebsiteToolStripMenuItem
             // 
-            this.dashWebsiteToolStripMenuItem.Enabled = false;
             this.dashWebsiteToolStripMenuItem.Name = "dashWebsiteToolStripMenuItem";
             this.dashWebsiteToolStripMenuItem.Size = new System.Drawing.Size(186, 22);
             this.dashWebsiteToolStripMenuItem.Text = "Dash Website";
@@ -676,6 +682,7 @@
             // tabPage1
             // 
             this.tabPage1.Controls.Add(this.textArea);
+            this.tabPage1.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.tabPage1.Location = new System.Drawing.Point(4, 24);
             this.tabPage1.Name = "tabPage1";
             this.tabPage1.Padding = new System.Windows.Forms.Padding(3);
@@ -709,6 +716,7 @@
             this.textArea.Cursor = System.Windows.Forms.Cursors.IBeam;
             this.textArea.DisabledColor = System.Drawing.Color.FromArgb(((int)(((byte)(100)))), ((int)(((byte)(180)))), ((int)(((byte)(180)))), ((int)(((byte)(180)))));
             this.textArea.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.textArea.Font = new System.Drawing.Font("Courier New", 9.75F);
             this.textArea.Hotkeys = resources.GetString("textArea.Hotkeys");
             this.textArea.IsReplaceMode = false;
             this.textArea.LeftPadding = 15;
@@ -843,6 +851,7 @@
             this.Controls.Add(this.mainToolStrip);
             this.Controls.Add(this.mainMenuStrip);
             this.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MainMenuStrip = this.mainMenuStrip;
             this.Name = "Main";
             this.Text = "{new file} - Dash";
