@@ -58,7 +58,7 @@ namespace Dash
             // TODO - Optimise this
             DashGlobal.EditorHelper.UserVariablesCurrentFile = new List<UserVariable>();
 
-            // Set window size from memory
+            // Set window size from memory.
             if (Settings.Default.WindowMaximised)
             {
                 this.WindowState = FormWindowState.Maximized;
