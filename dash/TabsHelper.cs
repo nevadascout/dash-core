@@ -182,9 +182,7 @@ namespace Dash
                             info.CrcHash = CrcCheck;
                         }
                         else
-                        {
                             info.Dirty = true;
-                        }
                     }
                 }
                 else
