@@ -1,18 +1,19 @@
-﻿using System;
+﻿using FastColoredTextBoxNS;
+using System;
 using System.Linq;
 using System.Windows.Forms;
-using FastColoredTextBoxNS;
 
 namespace Dash
 {
     public class TabsHelper
     {
         private EventHandler<TextChangedEventArgs> TextAreaTextChanged { get; set; }
+
         private EventHandler TextAreaSelectionChangedDelayed { get; set; }
+
         public TabControl MainTabControl { get; set; }
 
         public DashGlobal DashGlobal { get; set; }
-
 
         public TabsHelper(EventHandler<TextChangedEventArgs> textAreaTextChanged, EventHandler textAreaSelectionChangedDelayed, TabControl mainTabControl, DashGlobal dashGlobal)
         {
@@ -21,7 +22,6 @@ namespace Dash
             TextAreaTextChanged = textAreaTextChanged;
             DashGlobal = dashGlobal;
         }
-
 
         public void CreateBlankTab(FileType fileType = FileType.Sqf, string filename = "New File")
         {
@@ -50,11 +50,9 @@ namespace Dash
             Main.Lang = DashGlobal.FilesHelper.GetLangFromFile(fileToOpen);
 
             DashGlobal.EditorHelper.ActiveEditor.OpenFile(fileToOpen);
-            MainTabControl.TabPages[fileToOpen].Tag = new FileInfo() { Dirty = false, CrcHash = "TODO" };
-
+            MainTabControl.TabPages[fileToOpen].Tag = new FileInfo() { Dirty = false, CrcHash = CRC.CRC32.ComputeHash(fileToOpen), filePath = fileToOpen };
             DashGlobal.EditorHelper.PerformSyntaxHighlighting(null, Main.Lang, true);
         }
-
 
         public void CloseTab(TabPage tab)
         {
@@ -73,7 +71,7 @@ namespace Dash
 
             if (tag.Dirty)
             {
-                DialogResult  message = MessageBox.Show("This file has been modified. Do you want to save it?", "Save file?", MessageBoxButtons.YesNo);
+                DialogResult message = MessageBox.Show("This file has been modified. Do you want to save it?", "Save file?", MessageBoxButtons.YesNoCancel);
                 if (message == DialogResult.Yes)
                 {
                     // TODO -- Add call to filesHelper.SaveFile() to save the file or save as if it hasn't yet been saved
@@ -162,16 +160,51 @@ namespace Dash
             MainTabControl.SelectedTab.Tag = info;
         }
 
-
+        /// <summary>
+        /// Function to check if the File was changed outside of the editor.
+        /// </summary>
         public void CheckTabDirtyState()
         {
-            // TODO -- Add CRC hash checking in here
+            FileInfo info = MainTabControl.SelectedTab.Tag as FileInfo;
+            if (info != null)
+            {
+                if (System.IO.File.Exists(info.filePath))
+                {
+                    UInt32 CrcCheck = CRC.CRC32.ComputeHash(info.filePath);
+                    if (CrcCheck != info.CrcHash)
+                    {
+                        var result = System.Windows.Forms.MessageBox.Show((info.filePath + "\r\n\r\nThis file was changed by another program!\r\nDo you want to reload it?"),
+                            "Reload", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+                        if (result == DialogResult.Yes)
+                        {
+                            CloseTab(MainTabControl.SelectedTab);
+                            CreateTabOpenFile(info.filePath);
+                            info.CrcHash = CrcCheck;
+                        }
+                        else
+                        {
+                            info.Dirty = true;
+                        }
+                    }
+                }
+                else
+                {
+                    var result = System.Windows.Forms.MessageBox.Show((info.filePath + "\r\n\r\nThis file has been deleted!\r\nDo you want to keep it?"),
+                    "File deleted", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+                    if (result == DialogResult.No)
+                        CloseTab(MainTabControl.SelectedTab);
+                }
+            }
+            // TODO -- Add more crc checks. Now it is only checked if you change the tab
         }
     }
 
     public class FileInfo
     {
         public bool Dirty { get; set; }
-        public string CrcHash { get; set; }
+
+        public UInt32 CrcHash { get; set; }
+
+        public string filePath { get; set; }
     }
 }

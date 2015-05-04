@@ -83,6 +83,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="CRC32.cs" />
     <Compile Include="DashGlobal.cs" />
     <Compile Include="EditorHelper.cs" />
     <Compile Include="FilesHelper.cs" />

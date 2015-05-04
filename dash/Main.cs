@@ -15,7 +15,7 @@ namespace Dash
     public partial class Main : Form
     {
         private AutocompleteMenu ArmaSense { get; set; }
-        
+
         private FileSystemWatcher watcher = new FileSystemWatcher();
 
         private static bool allowSyntaxHighlighting = false;
@@ -27,7 +27,6 @@ namespace Dash
         public static string Lang { get; set; }
 
         public DashGlobal DashGlobal { get; set; }
-
 
         public Main()
         {
@@ -43,13 +42,12 @@ namespace Dash
                 this);
 
             InitializeComponent();
-
             this.DashGlobal.EditorHelper.MainTabControl = mainTabControl;
             this.DashGlobal.TabsHelper.MainTabControl = mainTabControl;
             this.DashGlobal.SettingsHelper.MainTabControl = mainTabControl;
             this.DashGlobal.EditorHelper.ArmaSenseImageList = armaSenseImageList;
         }
-        
+
         private void Main_Load(object sender, EventArgs e)
         {
             // Populate Treeview
@@ -134,8 +132,8 @@ namespace Dash
             // Add file watcher to update treeview on file change
             //watcher.Path = Settings.Default.TreeviewDir;
 
-            //watcher.NotifyFilter = NotifyFilters.DirectoryName | 
-            //                       NotifyFilters.FileName | 
+            //watcher.NotifyFilter = NotifyFilters.DirectoryName |
+            //                       NotifyFilters.FileName |
             //                       NotifyFilters.LastAccess |
             //                       NotifyFilters.LastWrite;
 
@@ -147,7 +145,6 @@ namespace Dash
             //watcher.EnableRaisingEvents = true;
 
             formLoaded = true;
-
             // Apply stored settings
             mainSplitContainer.SplitterDistance = Convert.ToInt32(Settings.Default.SplitterWidth);
 
@@ -163,7 +160,7 @@ namespace Dash
 
         private void Main_Resize(object sender, EventArgs e)
         {
-            Control window = (Control) sender;
+            Control window = (Control)sender;
 
             if (this.WindowState == FormWindowState.Maximized)
             {
@@ -188,7 +185,6 @@ namespace Dash
         {
             DashGlobal.FilesHelper.SetTreeviewDirectory(directoryTreeView, Settings.Default.TreeviewDir);
         }
-
 
         private void mainSplitContainer_SplitterMoved(object sender, SplitterEventArgs e)
         {
@@ -248,7 +244,7 @@ namespace Dash
                 else
                 {
                     DashGlobal.SetWindowTitle(tabControl.SelectedTab.Controls[0].Tag.ToString());
-
+                    DashGlobal.TabsHelper.CheckTabDirtyState();
                     Lang = DashGlobal.FilesHelper.GetLangFromFile(tabControl.SelectedTab.Controls[0].Tag.ToString());
                 }
 
@@ -258,15 +254,13 @@ namespace Dash
 
             // Break if the form isn't loaded
             if (!formLoaded) return;
-            
+
             // TODO - Optimise this
             DashGlobal.EditorHelper.UserVariablesCurrentFile = new List<UserVariable>();
 
             DashGlobal.SettingsHelper.UpdateOpenTabs();
             Settings.Default.Save();
         }
-
-
 
         #region Background Worker for building file userVars / rebuilding ArmaSense on update
 
@@ -312,7 +306,7 @@ namespace Dash
         private void loadUserVarsBw_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
         {
             var result = e.Result as WorkerObject;
-            
+
             try
             {
                 if (result == null) return;
@@ -327,9 +321,8 @@ namespace Dash
             }
         }
 
-        #endregion
+        #endregion Background Worker for building file userVars / rebuilding ArmaSense on update
 
-        
         #region TextArea (Editor) Event Handlers
 
         public void textArea_TextChanged(object sender, TextChangedEventArgs e)
@@ -349,10 +342,8 @@ namespace Dash
 
             DashGlobal.EditorHelper.PerformSyntaxHighlighting(e, Lang);
 
-
             // Todo - switch this out for a check against the file CRC hash
             //FilesHelper.CheckFileDirtyState();
-
 
             // Make file dirty
             FileInfo tag = mainTabControl.SelectedTab.Tag as FileInfo;
@@ -470,7 +461,7 @@ namespace Dash
                     {
                         // Check we're opening a file
                         FileAttributes fileAttributes = File.GetAttributes(fileName);
-                        if((fileAttributes & FileAttributes.Directory) == FileAttributes.Directory) break;
+                        if ((fileAttributes & FileAttributes.Directory) == FileAttributes.Directory) break;
 
                         try
                         {
@@ -496,8 +487,7 @@ namespace Dash
             e.Effect = DragDropEffects.All;
         }
 
-        #endregion
-
+        #endregion TextArea (Editor) Event Handlers
 
         #region Click Event Handlers
 
@@ -757,9 +747,7 @@ namespace Dash
             Process.Start("mailto:travis@impactmod.com");
         }
 
-        #endregion
-
-
+        #endregion Click Event Handlers
 
         private void mainTabControl_MouseUp(object sender, MouseEventArgs e)
         {
@@ -780,23 +768,24 @@ namespace Dash
 
         private void aboutToolStripMenuItem_Click(object sender, EventArgs e)
         {
-
         }
-
     }
 
-
-    class WorkerObject
+    internal class WorkerObject
     {
         public FastColoredTextBox Editor { get; set; }
+
         public List<UserVariable> UserVariables { get; set; }
+
         public bool ForceUpdate { get; set; }
     }
 
     public class UserVariable
     {
         public string VarName { get; set; }
+
         public string TooltipTitle { get; set; }
+
         public string TooltipText { get; set; }
     }
 }

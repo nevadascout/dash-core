@@ -10,6 +10,8 @@ namespace Dash
     {
         Sqf,
         Cpp,
+        Hpp,
+        Fsm,
         Other
     }
 }
