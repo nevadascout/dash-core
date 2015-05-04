@@ -244,7 +244,6 @@ namespace Dash
                 else
                 {
                     DashGlobal.SetWindowTitle(tabControl.SelectedTab.Controls[0].Tag.ToString());
-                    DashGlobal.TabsHelper.CheckTabDirtyState();
                     Lang = DashGlobal.FilesHelper.GetLangFromFile(tabControl.SelectedTab.Controls[0].Tag.ToString());
                 }
 
