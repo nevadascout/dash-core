@@ -1,15 +1,33 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Dash
+﻿namespace Dash
 {
+    /// <summary>
+    /// The file type.
+    /// </summary>
     public enum FileType
     {
-        Sqf,
-        Cpp,
+        /// <summary>
+        /// The sqf.
+        /// </summary>
+        Sqf, 
+
+        /// <summary>
+        /// The cpp.
+        /// </summary>
+        Cpp, 
+
+        /// <summary>
+        /// The hpp.
+        /// </summary>
+        Hpp, 
+
+        /// <summary>
+        /// The fsm.
+        /// </summary>
+        Fsm, 
+
+        /// <summary>
+        /// The other.
+        /// </summary>
         Other
     }
 }

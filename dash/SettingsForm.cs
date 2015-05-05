@@ -1,153 +1,309 @@
-﻿using System.Drawing;
-using System.Text.RegularExpressions;
-using System.Windows.Forms;
-using FastColoredTextBoxNS;
-
-namespace Dash
+﻿namespace Dash
 {
+    using System;
+    using System.Drawing;
+    using System.Text.RegularExpressions;
+    using System.Windows.Forms;
+
+    using Dash.Properties;
+
+    using FastColoredTextBoxNS;
+
+    /// <summary>
+    /// The settings form.
+    /// </summary>
     public partial class SettingsForm : Form
     {
-        // FCTB Syntax Highlighting
-        private readonly TextStyle commentStyle = new TextStyle(Brushes.Green, null, FontStyle.Regular);
+        /// <summary>
+        /// The auto change style.
+        /// </summary>
         private readonly TextStyle autoChangeStyle = new TextStyle(Brushes.SlateGray, null, FontStyle.Regular);
+
+        // FCTB Syntax Highlighting
+
+        /// <summary>
+        /// Comment styling
+        /// </summary>
+        private readonly TextStyle commentStyle = new TextStyle(Brushes.Green, null, FontStyle.Regular);
+
+        /// <summary>
+        /// User change style
+        /// </summary>
         private readonly TextStyle userChangeStyle = new TextStyle(Brushes.Black, Brushes.Moccasin, FontStyle.Regular);
 
+        /// <summary>
+        /// Initialises a new instance of the <see cref="SettingsForm"/> class.
+        /// </summary>
         public SettingsForm()
         {
-            InitializeComponent();
+            this.InitializeComponent();
 
-            var settings = Properties.Settings.Default;
+            var settings = Settings.Default;
 
-            chkShowRuler.Checked = settings.ShowRuler;
-            txtRulerWidth.Text = settings.RulerWidth.ToString();
+            this.chkShowRuler.Checked = settings.ShowRuler;
+            this.txtRulerWidth.Text = settings.RulerWidth.ToString();
 
-            chkEnableArmaSense.Checked = settings.EnableArmaSense;
-            chkEnableAutoIndentation.Checked = settings.EnableAutoIndentation;
-            chkHighlightSyntaxErrors.Checked = settings.EnableSyntaxErrorHighlighting;
-            
-            chkAutoAddFileCopyrightComment.Checked = settings.EnableFileHeaderComment;
-            commentEditor.Text = settings.FileHeaderCommentText;
+            this.chkEnableArmaSense.Checked = settings.EnableArmaSense;
+            this.chkEnableAutoIndentation.Checked = settings.EnableAutoIndentation;
+            this.chkHighlightSyntaxErrors.Checked = settings.EnableSyntaxErrorHighlighting;
 
-            chkEnableLineWrapping.Checked = settings.EnableLineWrapping;
+            this.chkAutoAddFileCopyrightComment.Checked = settings.EnableFileHeaderComment;
+            this.commentEditor.Text = settings.FileHeaderCommentText;
 
-            chkCustomSyntaxHighlighter.Checked = settings.EnableCustomSyntaxTheme;
-            chkCustomThemes.Checked = settings.EnableCustomDashTheme;
+            this.chkEnableLineWrapping.Checked = settings.EnableLineWrapping;
+
+            this.chkCustomSyntaxHighlighter.Checked = settings.EnableCustomSyntaxTheme;
+            this.chkCustomThemes.Checked = settings.EnableCustomDashTheme;
 
             if (!settings.EnableFileHeaderComment)
-                commentEditor.Enabled = false;
+            {
+                this.commentEditor.Enabled = false;
+            }
 
             if (!settings.ShowRuler)
-                txtRulerWidth.Enabled = false;
+            {
+                this.txtRulerWidth.Enabled = false;
+            }
         }
-        
+
+        /// <summary>
+        /// The sqf highlight.
+        /// </summary>
+        /// <param name="e">
+        /// The e.
+        /// </param>
         private void SqfHighlight(TextChangedEventArgs e)
         {
-            var range = commentEditor.Range;
+            var range = this.commentEditor.Range;
 
             // Clear editor styling
-            range.ClearStyle(commentStyle, autoChangeStyle, userChangeStyle);
+            range.ClearStyle(this.commentStyle, this.autoChangeStyle, this.userChangeStyle);
 
             // Re-apply styles to editor
-            range.SetStyle(autoChangeStyle, @"{filename}|{year}");
-            range.SetStyle(userChangeStyle, @"<.*>");
+            range.SetStyle(this.autoChangeStyle, @"{filename}|{year}");
+            range.SetStyle(this.userChangeStyle, @"<.*>");
 
-            range.SetStyle(commentStyle, @"//.*$", RegexOptions.Multiline);
-            range.SetStyle(commentStyle, @"(/\*.*?\*/)|(/\*.*)", RegexOptions.Singleline);
-            range.SetStyle(commentStyle, @"(/\*.*?\*/)|(.*\*/)", RegexOptions.Singleline | RegexOptions.RightToLeft);
+            range.SetStyle(this.commentStyle, @"//.*$", RegexOptions.Multiline);
+            range.SetStyle(this.commentStyle, @"(/\*.*?\*/)|(/\*.*)", RegexOptions.Singleline);
+            range.SetStyle(
+                this.commentStyle, 
+                @"(/\*.*?\*/)|(.*\*/)", 
+                RegexOptions.Singleline | RegexOptions.RightToLeft);
         }
 
+        /// <summary>
+        /// The comment editor_ text changed.
+        /// </summary>
+        /// <param name="sender">
+        /// The sender.
+        /// </param>
+        /// <param name="e">
+        /// The e.
+        /// </param>
         private void commentEditor_TextChanged(object sender, TextChangedEventArgs e)
         {
-            SqfHighlight(e);
+            this.SqfHighlight(e);
         }
 
-        private void btnSave_Click(object sender, System.EventArgs e)
+        /// <summary>
+        /// The btn save_ click.
+        /// </summary>
+        /// <param name="sender">
+        /// The sender.
+        /// </param>
+        /// <param name="e">
+        /// The e.
+        /// </param>
+        private void btnSave_Click(object sender, EventArgs e)
         {
             MessageBox.Show("You must restart Dash for your setting changes to take affect.");
 
-            Properties.Settings.Default.Save();
+            Settings.Default.Save();
             this.Close();
         }
 
-        private void btnCancel_Click(object sender, System.EventArgs e)
+        /// <summary>
+        /// The btn cancel_ click.
+        /// </summary>
+        /// <param name="sender">
+        /// The sender.
+        /// </param>
+        /// <param name="e">
+        /// The e.
+        /// </param>
+        private void btnCancel_Click(object sender, EventArgs e)
         {
-            Properties.Settings.Default.Reload();
+            Settings.Default.Reload();
         }
 
-        private void chkShowRuler_CheckedChanged(object sender, System.EventArgs e)
+        /// <summary>
+        /// The chk show ruler_ checked changed.
+        /// </summary>
+        /// <param name="sender">
+        /// The sender.
+        /// </param>
+        /// <param name="e">
+        /// The e.
+        /// </param>
+        private void chkShowRuler_CheckedChanged(object sender, EventArgs e)
         {
-            Properties.Settings.Default.ShowRuler = chkShowRuler.Checked;
+            Settings.Default.ShowRuler = this.chkShowRuler.Checked;
 
-            if (chkShowRuler.Checked)
+            if (this.chkShowRuler.Checked)
             {
-                txtRulerWidth.Enabled = true;
+                this.txtRulerWidth.Enabled = true;
             }
             else
             {
-                txtRulerWidth.Enabled = false;
+                this.txtRulerWidth.Enabled = false;
             }
         }
 
-        private void chkAutoAddFileCopyrightComment_CheckedChanged(object sender, System.EventArgs e)
+        /// <summary>
+        /// The chk auto add file copyright comment_ checked changed.
+        /// </summary>
+        /// <param name="sender">
+        /// The sender.
+        /// </param>
+        /// <param name="e">
+        /// The e.
+        /// </param>
+        private void chkAutoAddFileCopyrightComment_CheckedChanged(object sender, EventArgs e)
         {
-            Properties.Settings.Default.EnableFileHeaderComment = chkAutoAddFileCopyrightComment.Checked;
+            Settings.Default.EnableFileHeaderComment = this.chkAutoAddFileCopyrightComment.Checked;
 
-            if (chkAutoAddFileCopyrightComment.Checked)
+            if (this.chkAutoAddFileCopyrightComment.Checked)
             {
-                commentEditor.Enabled = true;
+                this.commentEditor.Enabled = true;
             }
             else
             {
-                commentEditor.Enabled = false;
+                this.commentEditor.Enabled = false;
             }
         }
 
-        private void chkEnableArmaSense_CheckedChanged(object sender, System.EventArgs e)
+        /// <summary>
+        /// The chk enable arma sense_ checked changed.
+        /// </summary>
+        /// <param name="sender">
+        /// The sender.
+        /// </param>
+        /// <param name="e">
+        /// The e.
+        /// </param>
+        private void chkEnableArmaSense_CheckedChanged(object sender, EventArgs e)
         {
-            Properties.Settings.Default.EnableArmaSense = chkEnableArmaSense.Checked;
-
+            Settings.Default.EnableArmaSense = this.chkEnableArmaSense.Checked;
         }
 
-        private void chkHighlightSyntaxErrors_CheckedChanged(object sender, System.EventArgs e)
+        /// <summary>
+        /// The chk highlight syntax errors_ checked changed.
+        /// </summary>
+        /// <param name="sender">
+        /// The sender.
+        /// </param>
+        /// <param name="e">
+        /// The e.
+        /// </param>
+        private void chkHighlightSyntaxErrors_CheckedChanged(object sender, EventArgs e)
         {
-            Properties.Settings.Default.EnableSyntaxErrorHighlighting = chkHighlightSyntaxErrors.Checked;
+            Settings.Default.EnableSyntaxErrorHighlighting = this.chkHighlightSyntaxErrors.Checked;
         }
 
-        private void chkEnableAutoIndentation_CheckedChanged(object sender, System.EventArgs e)
+        /// <summary>
+        /// The chk enable auto indentation_ checked changed.
+        /// </summary>
+        /// <param name="sender">
+        /// The sender.
+        /// </param>
+        /// <param name="e">
+        /// The e.
+        /// </param>
+        private void chkEnableAutoIndentation_CheckedChanged(object sender, EventArgs e)
         {
-            Properties.Settings.Default.EnableAutoIndentation = chkEnableAutoIndentation.Checked;
+            Settings.Default.EnableAutoIndentation = this.chkEnableAutoIndentation.Checked;
         }
 
-        private void chkCustomSyntaxHighlighter_CheckedChanged(object sender, System.EventArgs e)
+        /// <summary>
+        /// The chk custom syntax highlighter_ checked changed.
+        /// </summary>
+        /// <param name="sender">
+        /// The sender.
+        /// </param>
+        /// <param name="e">
+        /// The e.
+        /// </param>
+        private void chkCustomSyntaxHighlighter_CheckedChanged(object sender, EventArgs e)
         {
-            Properties.Settings.Default.EnableCustomSyntaxTheme = chkCustomSyntaxHighlighter.Checked;
+            Settings.Default.EnableCustomSyntaxTheme = this.chkCustomSyntaxHighlighter.Checked;
         }
 
-        private void chkCustomThemes_CheckedChanged(object sender, System.EventArgs e)
+        /// <summary>
+        /// The chk custom themes_ checked changed.
+        /// </summary>
+        /// <param name="sender">
+        /// The sender.
+        /// </param>
+        /// <param name="e">
+        /// The e.
+        /// </param>
+        private void chkCustomThemes_CheckedChanged(object sender, EventArgs e)
         {
-            Properties.Settings.Default.EnableCustomDashTheme = chkCustomThemes.Checked;
+            Settings.Default.EnableCustomDashTheme = this.chkCustomThemes.Checked;
         }
 
+        /// <summary>
+        /// The settings form_ form closing.
+        /// </summary>
+        /// <param name="sender">
+        /// The sender.
+        /// </param>
+        /// <param name="e">
+        /// The e.
+        /// </param>
         private void SettingsForm_FormClosing(object sender, FormClosingEventArgs e)
         {
-            Properties.Settings.Default.Reload();
+            Settings.Default.Reload();
         }
 
+        /// <summary>
+        /// The lnk reset to default_ link clicked.
+        /// </summary>
+        /// <param name="sender">
+        /// The sender.
+        /// </param>
+        /// <param name="e">
+        /// The e.
+        /// </param>
         private void lnkResetToDefault_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
-            DialogResult resetDialogResult = MessageBox.Show("Do you want to reset your Dash settings?\n\nWarning: This is irreversible", "Reset Settings?", MessageBoxButtons.YesNo);
+            var resetDialogResult =
+                MessageBox.Show(
+                    "Do you want to reset your Dash settings?\n\nWarning: This is irreversible", 
+                    "Reset Settings?", 
+                    MessageBoxButtons.YesNo);
             if (resetDialogResult == DialogResult.Yes)
             {
-                Properties.Settings.Default.Reset();
-                Properties.Settings.Default.Save();
-                MessageBox.Show("Your Dash settings have been reset to their defaults.\nPlease restart Dash for this to take effect.");
+                Settings.Default.Reset();
+                Settings.Default.Save();
+                MessageBox.Show(
+                    "Your Dash settings have been reset to their defaults.\nPlease restart Dash for this to take effect.");
                 this.Close();
             }
         }
 
-        private void chkEnableLineWrapping_CheckedChanged(object sender, System.EventArgs e)
+        /// <summary>
+        /// The chk enable line wrapping_ checked changed.
+        /// </summary>
+        /// <param name="sender">
+        /// The sender.
+        /// </param>
+        /// <param name="e">
+        /// The e.
+        /// </param>
+        private void chkEnableLineWrapping_CheckedChanged(object sender, EventArgs e)
         {
-            Properties.Settings.Default.EnableLineWrapping = chkEnableLineWrapping.Checked;
+            Settings.Default.EnableLineWrapping = this.chkEnableLineWrapping.Checked;
         }
     }
 }

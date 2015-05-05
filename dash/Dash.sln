@@ -14,6 +14,8 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{E700CBE7-3459-447D-96DA-FD4E035D1F13}"
 	ProjectSection(SolutionItems) = preProject
 		readme.md = readme.md
+		..\Settings.StyleCop = ..\Settings.StyleCop
+		..\Todo.txt = ..\Todo.txt
 	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Dash.Installer", "..\Dash.Installer\Dash.Installer.csproj", "{61306318-68C9-4A9B-9701-95420E0FA830}"

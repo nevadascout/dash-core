@@ -1,5 +1,4 @@
 ﻿using System.Reflection;
-using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 
 // General Information about an assembly is controlled through the following 
@@ -9,7 +8,7 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyDescription("Dash SQF Development Environment")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("nevada_scout")]
-[assembly: AssemblyProduct("Dash  SQF Editor")]
+[assembly: AssemblyProduct("Dash SQF Editor")]
 [assembly: AssemblyCopyright("Copyright © nevada_scout 2015")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
