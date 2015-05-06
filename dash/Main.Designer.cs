@@ -812,9 +812,9 @@
             // btnRefreshFileBrowser
             // 
             this.btnRefreshFileBrowser.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnRefreshFileBrowser.Location = new System.Drawing.Point(811, 12);
+            this.btnRefreshFileBrowser.Location = new System.Drawing.Point(822, 12);
             this.btnRefreshFileBrowser.Name = "btnRefreshFileBrowser";
-            this.btnRefreshFileBrowser.Size = new System.Drawing.Size(138, 23);
+            this.btnRefreshFileBrowser.Size = new System.Drawing.Size(127, 23);
             this.btnRefreshFileBrowser.TabIndex = 5;
             this.btnRefreshFileBrowser.Text = "Refresh File Browser";
             this.btnRefreshFileBrowser.UseVisualStyleBackColor = true;
