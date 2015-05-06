@@ -247,7 +247,6 @@
             this.commentEditor.CharWidth = 8;
             this.commentEditor.Cursor = System.Windows.Forms.Cursors.IBeam;
             this.commentEditor.DisabledColor = System.Drawing.Color.FromArgb(((int)(((byte)(100)))), ((int)(((byte)(180)))), ((int)(((byte)(180)))), ((int)(((byte)(180)))));
-            this.commentEditor.Font = new System.Drawing.Font("Courier New", 9.75F);
             this.commentEditor.HighlightFoldingIndicator = false;
             this.commentEditor.Hotkeys = resources.GetString("commentEditor.Hotkeys");
             this.commentEditor.IsReplaceMode = false;

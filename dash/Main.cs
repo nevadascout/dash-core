@@ -597,29 +597,35 @@ namespace Dash
 
         private void saveToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            var editor = DashGlobal.EditorHelper.GetActiveEditor();
-
-            var filePath = editor.Tag.ToString();
-            var contents = editor.Text;
-
-            if (filePath == String.Empty)
+            if (isTabAlive())
             {
-                SaveFileDialog sfd = new SaveFileDialog
-                {
-                    Filter = "SQF File|*.sqf|C++ File|*.cpp|SQM File|*.sqm|All Files|*.*"
-                };
+                var editor = DashGlobal.EditorHelper.GetActiveEditor();
 
-                if (sfd.ShowDialog() == DialogResult.OK)
+                var filePath = editor.Tag.ToString();
+                var contents = editor.Text;
+
+
+                if (filePath == String.Empty)
                 {
-                    File.WriteAllText(sfd.FileName, DashGlobal.EditorHelper.GetActiveEditor().Text);
+                    SaveFileDialog sfd = new SaveFileDialog
+                    {
+                        Filter = "SQF File|*.sqf|C++ File|*.cpp|SQM File|*.sqm|All Files|*.*"
+                    };
+
+                    if (sfd.ShowDialog() == DialogResult.OK)
+                    {
+                        File.WriteAllText(sfd.FileName, DashGlobal.EditorHelper.GetActiveEditor().Text);
+                        DashGlobal.TabsHelper.SetSelectedTabClean();
+
+                    }
+                }
+                else
+                {
+                    File.WriteAllText(filePath, contents);
                     DashGlobal.TabsHelper.SetSelectedTabClean();
                 }
             }
-            else
-            {
-                File.WriteAllText(filePath, contents);
-                DashGlobal.TabsHelper.SetSelectedTabClean();
-            }
+            else MessageBox.Show("Failed to save file!", "Failed", MessageBoxButtons.OK, MessageBoxIcon.Error);
         }
 
         private void openFileToolStripMenuItem_Click(object sender, EventArgs e)
@@ -637,21 +643,25 @@ namespace Dash
 
         private void saveAsToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            SaveFileDialog sfd = new SaveFileDialog
+            if (isTabAlive())
             {
-                Filter = "SQF File|*.sqf|C++ File|*.cpp|SQM File|*.sqm|All Files|*.*"
-            };
+                SaveFileDialog sfd = new SaveFileDialog
+                {
+                    Filter = "SQF File|*.sqf|C++ File|*.cpp|SQM File|*.sqm|All Files|*.*"
+                };
 
-            if (sfd.ShowDialog() == DialogResult.OK)
-            {
-                File.WriteAllText(sfd.FileName, DashGlobal.EditorHelper.GetActiveEditor().Text);
+                if (sfd.ShowDialog() == DialogResult.OK)
+                {
+                    File.WriteAllText(sfd.FileName, DashGlobal.EditorHelper.GetActiveEditor().Text);
 
-                // Close current tab
-                DashGlobal.TabsHelper.CloseTab(mainTabControl.SelectedTab);
+                    // Close current tab
+                    DashGlobal.TabsHelper.CloseTab(mainTabControl.SelectedTab);
 
-                // Reopen from file
-                DashGlobal.TabsHelper.CreateTabOpenFile(sfd.FileName);
+                    // Reopen from file
+                    DashGlobal.TabsHelper.CreateTabOpenFile(sfd.FileName);
+                }
             }
+            else MessageBox.Show("Failed to save file!", "Failed", MessageBoxButtons.OK, MessageBoxIcon.Error);
         }
 
         private void commentToolStripButton_Click(object sender, EventArgs e)
@@ -832,6 +842,18 @@ namespace Dash
             }
         }
 
+        /// <summary>
+        /// Check if <= 0 tabs are active
+        /// 
+        /// ~ trdwll
+        /// </summary>
+        /// <returns>Returns true or false</returns>
+        private bool isTabAlive()
+        {
+            if (mainTabControl.TabCount <= 0) return false;
+            else return true;
+        }
+
         private void aboutToolStripMenuItem_Click(object sender, EventArgs e)
         {
 
@@ -872,6 +894,13 @@ namespace Dash
             checkForUpdate(true);
         }
 
+        private void closeAllTabsToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            // Close all tabs ~ trdwll
+            mainTabControl.TabPages.Clear();
+        }
+
+        private void saveAllToolStripMenuItem_Click(object sender, EventArgs e){ }
     }
 
 
