@@ -29,6 +29,60 @@ namespace Dash
         public DashGlobal DashGlobal { get; set; }
 
 
+        // Updater vars ~ trdwll
+        // Set all of these globally in the config file
+        double version = 1.5; // App version 
+        string site = "http://pastebin.com/raw.php?i=kEfPgtGQ"; // URL to check version
+        string downloadFileLocation = "https://mega.co.nz/#!uJ9FXA7L!v7mKjV5DTKs5dp7lRfvNkwBP2NZJjqT681nIHlKWs7w"; // Download new update (host staticly on the http://dash.nevadascout.com/ domain)
+        // Updater vars ~ trdwll
+
+        /// <summary>
+        /// Check for updates
+        /// 
+        /// Update code to download the file in the background rather than
+        /// via Process.Start(url);
+        /// 
+        /// ~ trdwll
+        /// </summary>
+        /// <param name="bShowNotification">boolean - if you want to display a notification in the taskbar (over on the right) ps, I can't remember the name of it lol</param>
+        private void checkForUpdate(bool bShowNotification = false)
+        {
+            try
+            {
+                System.Net.WebClient client = new System.Net.WebClient();
+                Stream stream = client.OpenRead(site);
+                StreamReader reader = new StreamReader(stream);
+
+                double webVersion = Convert.ToDouble(reader.ReadToEnd());
+
+                if (webVersion > version)
+                {
+                    if (bShowNotification)
+                    {
+                        string icoPath = Application.StartupPath + @"\dash-code.ico";
+                        if (File.Exists(icoPath)) updateIcon.Icon = new System.Drawing.Icon(icoPath);
+                        else updateIcon.Icon = SystemIcons.Information;
+
+                        updateIcon.BalloonTipText = "Dash Update " + webVersion.ToString() + " Available!";
+                        updateIcon.BalloonTipTitle = "Dash";
+                        updateIcon.ShowBalloonTip(3000);
+                    }
+                    DialogResult dialogResult = MessageBox.Show("Would you like to download the newest update?", "Update " + webVersion.ToString() + " Available", MessageBoxButtons.YesNo);
+                    if (dialogResult == DialogResult.Yes) System.Diagnostics.Process.Start(downloadFileLocation);
+                }
+                else MessageBox.Show("You are running: " + version.ToString() + "\nThis is the current version.");
+
+                stream.Close();
+                stream.Dispose();
+                client.Dispose();
+            }
+            catch
+            {
+                MessageBox.Show("Unable to update. Check your internet connection!");
+            }
+        }
+
+
         public Main()
         {
             this.DashGlobal = new DashGlobal(
@@ -543,29 +597,35 @@ namespace Dash
 
         private void saveToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            var editor = DashGlobal.EditorHelper.GetActiveEditor();
-
-            var filePath = editor.Tag.ToString();
-            var contents = editor.Text;
-
-            if (filePath == String.Empty)
+            if (isTabAlive())
             {
-                SaveFileDialog sfd = new SaveFileDialog
-                {
-                    Filter = "SQF File|*.sqf|C++ File|*.cpp|SQM File|*.sqm|All Files|*.*"
-                };
+                var editor = DashGlobal.EditorHelper.GetActiveEditor();
 
-                if (sfd.ShowDialog() == DialogResult.OK)
+                var filePath = editor.Tag.ToString();
+                var contents = editor.Text;
+
+
+                if (filePath == String.Empty)
                 {
-                    File.WriteAllText(sfd.FileName, DashGlobal.EditorHelper.GetActiveEditor().Text);
+                    SaveFileDialog sfd = new SaveFileDialog
+                    {
+                        Filter = "SQF File|*.sqf|C++ File|*.cpp|SQM File|*.sqm|All Files|*.*"
+                    };
+
+                    if (sfd.ShowDialog() == DialogResult.OK)
+                    {
+                        File.WriteAllText(sfd.FileName, DashGlobal.EditorHelper.GetActiveEditor().Text);
+                        DashGlobal.TabsHelper.SetSelectedTabClean();
+
+                    }
+                }
+                else
+                {
+                    File.WriteAllText(filePath, contents);
                     DashGlobal.TabsHelper.SetSelectedTabClean();
                 }
             }
-            else
-            {
-                File.WriteAllText(filePath, contents);
-                DashGlobal.TabsHelper.SetSelectedTabClean();
-            }
+            else MessageBox.Show("Failed to save file!", "Failed", MessageBoxButtons.OK, MessageBoxIcon.Error);
         }
 
         private void openFileToolStripMenuItem_Click(object sender, EventArgs e)
@@ -583,21 +643,25 @@ namespace Dash
 
         private void saveAsToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            SaveFileDialog sfd = new SaveFileDialog
+            if (isTabAlive())
             {
-                Filter = "SQF File|*.sqf|C++ File|*.cpp|SQM File|*.sqm|All Files|*.*"
-            };
+                SaveFileDialog sfd = new SaveFileDialog
+                {
+                    Filter = "SQF File|*.sqf|C++ File|*.cpp|SQM File|*.sqm|All Files|*.*"
+                };
 
-            if (sfd.ShowDialog() == DialogResult.OK)
-            {
-                File.WriteAllText(sfd.FileName, DashGlobal.EditorHelper.GetActiveEditor().Text);
+                if (sfd.ShowDialog() == DialogResult.OK)
+                {
+                    File.WriteAllText(sfd.FileName, DashGlobal.EditorHelper.GetActiveEditor().Text);
 
-                // Close current tab
-                DashGlobal.TabsHelper.CloseTab(mainTabControl.SelectedTab);
+                    // Close current tab
+                    DashGlobal.TabsHelper.CloseTab(mainTabControl.SelectedTab);
 
-                // Reopen from file
-                DashGlobal.TabsHelper.CreateTabOpenFile(sfd.FileName);
+                    // Reopen from file
+                    DashGlobal.TabsHelper.CreateTabOpenFile(sfd.FileName);
+                }
             }
+            else MessageBox.Show("Failed to save file!", "Failed", MessageBoxButtons.OK, MessageBoxIcon.Error);
         }
 
         private void commentToolStripButton_Click(object sender, EventArgs e)
@@ -778,11 +842,65 @@ namespace Dash
             }
         }
 
+        /// <summary>
+        /// Check if <= 0 tabs are active
+        /// 
+        /// ~ trdwll
+        /// </summary>
+        /// <returns>Returns true or false</returns>
+        private bool isTabAlive()
+        {
+            if (mainTabControl.TabCount <= 0) return false;
+            else return true;
+        }
+
         private void aboutToolStripMenuItem_Click(object sender, EventArgs e)
         {
 
         }
 
+        private void closeProjectToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            // Simple method of clearing project ~ trdwll
+            directoryTreeView.Nodes.Clear();
+            Settings.Default.TreeviewDir = null;
+            Settings.Default.Save();
+        }
+
+        private void openDashProjectToolStripMenuItem_Click(object sender, EventArgs e) {}
+
+        #region Drag & Drop
+        // ~ trdwll
+        private void directoryTreeView_DragDrop(object sender, DragEventArgs e)
+        {
+            foreach (string files in (string[])e.Data.GetData(DataFormats.FileDrop))
+            {
+                DashGlobal.FilesHelper.SetTreeviewDirectory(directoryTreeView, files);
+                Settings.Default.TreeviewDir = files;
+                Settings.Default.Save();
+            }
+        }
+
+        private void directoryTreeView_DragEnter(object sender, DragEventArgs e)
+        {
+            e.Effect = DragDropEffects.All;
+        }
+
+        #endregion Drag & Drop
+
+        private void checkForUpdatesToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            // Check for updates ~ trdwll
+            checkForUpdate(true);
+        }
+
+        private void closeAllTabsToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            // Close all tabs ~ trdwll
+            mainTabControl.TabPages.Clear();
+        }
+
+        private void saveAllToolStripMenuItem_Click(object sender, EventArgs e){ }
     }
 
 
