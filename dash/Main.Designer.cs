@@ -58,6 +58,8 @@
             this.saveAllToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
             this.closeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.closeAllTabsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.closeProjectToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator4 = new System.Windows.Forms.ToolStripSeparator();
             this.fileDiffToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.editToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -90,6 +92,7 @@
             this.sendFeedbackToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator14 = new System.Windows.Forms.ToolStripSeparator();
             this.aboutToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.checkForUpdatesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.mainSplitContainer = new System.Windows.Forms.SplitContainer();
             this.mainTabControl = new System.Windows.Forms.TabControl();
             this.tabPage1 = new System.Windows.Forms.TabPage();
@@ -106,6 +109,7 @@
             this.toolStripSeparator13 = new System.Windows.Forms.ToolStripSeparator();
             this.closeAllButThisTabBarContextMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.loadUserVarsBw = new System.ComponentModel.BackgroundWorker();
+            this.updateIcon = new System.Windows.Forms.NotifyIcon(this.components);
             this.mainToolStrip.SuspendLayout();
             this.mainMenuStrip.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.mainSplitContainer)).BeginInit();
@@ -260,6 +264,8 @@
             this.saveAllToolStripMenuItem,
             this.toolStripSeparator1,
             this.closeToolStripMenuItem,
+            this.closeAllTabsToolStripMenuItem,
+            this.closeProjectToolStripMenuItem,
             this.toolStripSeparator4,
             this.fileDiffToolStripMenuItem});
             this.fileToolStripMenuItem.Name = "fileToolStripMenuItem";
@@ -387,6 +393,20 @@
             this.closeToolStripMenuItem.Size = new System.Drawing.Size(187, 22);
             this.closeToolStripMenuItem.Text = "Close Tab";
             this.closeToolStripMenuItem.Click += new System.EventHandler(this.closeToolStripMenuItem_Click);
+            // 
+            // closeAllTabsToolStripMenuItem
+            // 
+            this.closeAllTabsToolStripMenuItem.Name = "closeAllTabsToolStripMenuItem";
+            this.closeAllTabsToolStripMenuItem.Size = new System.Drawing.Size(187, 22);
+            this.closeAllTabsToolStripMenuItem.Text = "Close All Tabs";
+            this.closeAllTabsToolStripMenuItem.Click += new System.EventHandler(this.closeAllTabsToolStripMenuItem_Click);
+            // 
+            // closeProjectToolStripMenuItem
+            // 
+            this.closeProjectToolStripMenuItem.Name = "closeProjectToolStripMenuItem";
+            this.closeProjectToolStripMenuItem.Size = new System.Drawing.Size(187, 22);
+            this.closeProjectToolStripMenuItem.Text = "Close Project";
+            this.closeProjectToolStripMenuItem.Click += new System.EventHandler(this.closeProjectToolStripMenuItem_Click);
             // 
             // toolStripSeparator4
             // 
@@ -575,7 +595,8 @@
             this.logStackTraceToolStripMenuItem,
             this.sendFeedbackToolStripMenuItem,
             this.toolStripSeparator14,
-            this.aboutToolStripMenuItem});
+            this.aboutToolStripMenuItem,
+            this.checkForUpdatesToolStripMenuItem});
             this.helpToolStripMenuItem.Name = "helpToolStripMenuItem";
             this.helpToolStripMenuItem.Size = new System.Drawing.Size(44, 20);
             this.helpToolStripMenuItem.Text = "Help";
@@ -650,6 +671,13 @@
             this.aboutToolStripMenuItem.Text = "About Dash";
             this.aboutToolStripMenuItem.Click += new System.EventHandler(this.aboutToolStripMenuItem_Click);
             // 
+            // checkForUpdatesToolStripMenuItem
+            // 
+            this.checkForUpdatesToolStripMenuItem.Name = "checkForUpdatesToolStripMenuItem";
+            this.checkForUpdatesToolStripMenuItem.Size = new System.Drawing.Size(186, 22);
+            this.checkForUpdatesToolStripMenuItem.Text = "Check For Updates";
+            this.checkForUpdatesToolStripMenuItem.Click += new System.EventHandler(this.checkForUpdatesToolStripMenuItem_Click);
+            // 
             // mainSplitContainer
             // 
             this.mainSplitContainer.Dock = System.Windows.Forms.DockStyle.Fill;
@@ -718,7 +746,6 @@
             this.textArea.Cursor = System.Windows.Forms.Cursors.IBeam;
             this.textArea.DisabledColor = System.Drawing.Color.FromArgb(((int)(((byte)(100)))), ((int)(((byte)(180)))), ((int)(((byte)(180)))), ((int)(((byte)(180)))));
             this.textArea.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.textArea.Font = new System.Drawing.Font("Courier New", 9.75F);
             this.textArea.Hotkeys = resources.GetString("textArea.Hotkeys");
             this.textArea.IsReplaceMode = false;
             this.textArea.LeftPadding = 15;
@@ -745,6 +772,7 @@
             // 
             // directoryTreeView
             // 
+            this.directoryTreeView.AllowDrop = true;
             this.directoryTreeView.Dock = System.Windows.Forms.DockStyle.Fill;
             this.directoryTreeView.ImageIndex = 0;
             this.directoryTreeView.ImageList = this.treeViewImageList;
@@ -754,6 +782,8 @@
             this.directoryTreeView.Size = new System.Drawing.Size(242, 624);
             this.directoryTreeView.TabIndex = 0;
             this.directoryTreeView.NodeMouseDoubleClick += new System.Windows.Forms.TreeNodeMouseClickEventHandler(this.directoryTreeView_NodeMouseDoubleClick);
+            this.directoryTreeView.DragDrop += new System.Windows.Forms.DragEventHandler(this.directoryTreeView_DragDrop);
+            this.directoryTreeView.DragEnter += new System.Windows.Forms.DragEventHandler(this.directoryTreeView_DragEnter);
             // 
             // treeViewImageList
             // 
@@ -841,6 +871,11 @@
             this.loadUserVarsBw.WorkerSupportsCancellation = true;
             this.loadUserVarsBw.DoWork += new System.ComponentModel.DoWorkEventHandler(this.loadUserVarsBw_DoWork);
             this.loadUserVarsBw.RunWorkerCompleted += new System.ComponentModel.RunWorkerCompletedEventHandler(this.loadUserVarsBw_RunWorkerCompleted);
+            // 
+            // updateIcon
+            // 
+            this.updateIcon.Text = "notifyIcon1";
+            this.updateIcon.Visible = true;
             // 
             // Main
             // 
@@ -955,6 +990,10 @@
         private System.Windows.Forms.ToolStripMenuItem logStackTraceToolStripMenuItem;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator14;
         private System.Windows.Forms.ToolStripMenuItem sendFeedbackToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem closeAllTabsToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem closeProjectToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem checkForUpdatesToolStripMenuItem;
+        private System.Windows.Forms.NotifyIcon updateIcon;
     }
 }
 
