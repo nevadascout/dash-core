@@ -396,6 +396,7 @@
             // 
             // closeAllTabsToolStripMenuItem
             // 
+            this.closeAllTabsToolStripMenuItem.Enabled = false;
             this.closeAllTabsToolStripMenuItem.Name = "closeAllTabsToolStripMenuItem";
             this.closeAllTabsToolStripMenuItem.Size = new System.Drawing.Size(187, 22);
             this.closeAllTabsToolStripMenuItem.Text = "Close All Tabs";

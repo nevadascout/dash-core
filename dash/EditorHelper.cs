@@ -25,6 +25,8 @@
         private readonly TextStyle maroonStyle = new TextStyle(Brushes.Navy, null, FontStyle.Regular);
         private readonly TextStyle stringStyle = new TextStyle(Brushes.LightSeaGreen, null, FontStyle.Bold);
 
+        #region Keywords
+
         // Keywords/Snippets for ArmaSense (SQF)
         private readonly string[] keywordList =
             {
@@ -510,40 +512,12 @@
                 "worldToModelVisual", "worldToScreen"
             };
 
+        #endregion
+
         private readonly string[] snippets = { };
         
-        //// { "diag_log \"\";", "for \"_i\" from 1 to 10 do { debugLog _i; };", "call compile preprocessFileLine Numbers \"\";" };
+        // { "diag_log \"\";", "for \"_i\" from 1 to 10 do { debugLog _i; };", "call compile preprocessFileLine Numbers \"\";" };
         
-        /// <summary>
-        /// Initialises a new instance of the <see cref="EditorHelper"/> class.
-        /// </summary>
-        /// <param name="textAreaTextChanged">
-        /// The text area text changed.
-        /// </param>
-        /// <param name="textAreaTextChangedDelayed">
-        /// The text area text changed delayed.
-        /// </param>
-        /// <param name="textAreaKeyUp">
-        /// The text area key up.
-        /// </param>
-        /// <param name="textAreaSelectionChangedDelayed">
-        /// The text area selection changed delayed.
-        /// </param>
-        /// <param name="textAreaDragDrop">
-        /// The text area drag drop.
-        /// </param>
-        /// <param name="textAreaDragEnter">
-        /// The text area drag enter.
-        /// </param>
-        /// <param name="mainTabControl">
-        /// The main tab control.
-        /// </param>
-        /// <param name="armaSense">
-        /// The arma sense.
-        /// </param>
-        /// <param name="dashGlobal">
-        /// The dash global.
-        /// </param>
         public EditorHelper(
             EventHandler<TextChangedEventArgs> textAreaTextChanged, 
             EventHandler<TextChangedEventArgs> textAreaTextChangedDelayed, 
@@ -581,39 +555,18 @@
             }
         }
 
-        /// <summary>
-        /// Gets or sets the main tab control.
-        /// </summary>
         public TabControl MainTabControl { get; set; }
 
-        /// <summary>
-        /// Gets or sets the arma sense image list.
-        /// </summary>
         public ImageList ArmaSenseImageList { get; set; }
 
-        /// <summary>
-        /// Gets or sets the arma sense.
-        /// </summary>
         public AutocompleteMenu ArmaSense { get; set; }
 
-        /// <summary>
-        /// Gets or sets the user variables current file.
-        /// </summary>
         public List<UserVariable> UserVariablesCurrentFile { get; set; }
 
-        /// <summary>
-        /// Gets or sets the arma list items count.
-        /// </summary>
         public int ArmaListItemsCount { get; set; }
 
-        /// <summary>
-        /// Gets or sets the dash global.
-        /// </summary>
         public DashGlobal DashGlobal { get; set; }
 
-        /// <summary>
-        /// Gets the active editor.
-        /// </summary>
         public FastColoredTextBox ActiveEditor
         {
             get
@@ -622,50 +575,20 @@
             }
         }
 
-        /// <summary>
-        /// Gets or sets the text area text changed.
-        /// </summary>
         private EventHandler<TextChangedEventArgs> TextAreaTextChanged { get; set; }
 
-        /// <summary>
-        /// Gets or sets the text area text changed delayed.
-        /// </summary>
         private EventHandler<TextChangedEventArgs> TextAreaTextChangedDelayed { get; set; }
 
-        /// <summary>
-        /// Gets or sets the text area key up.
-        /// </summary>
         private KeyEventHandler TextAreaKeyUp { get; set; }
 
-        /// <summary>
-        /// Gets or sets the text area selection changed delayed.
-        /// </summary>
         private EventHandler TextAreaSelectionChangedDelayed { get; set; }
 
-        /// <summary>
-        /// Gets or sets the text area drag drop.
-        /// </summary>
         private DragEventHandler TextAreaDragDrop { get; set; }
 
-        /// <summary>
-        /// Gets or sets the text area drag enter.
-        /// </summary>
         private DragEventHandler TextAreaDragEnter { get; set; }
 
-        /// <summary>
-        /// Gets or sets the arma sense keywords.
-        /// </summary>
         private List<AutocompleteItem> ArmaSenseKeywords { get; set; }
 
-        /// <summary>
-        /// The create editor.
-        /// </summary>
-        /// <param name="filePath">
-        /// The file path.
-        /// </param>
-        /// <returns>
-        /// The <see cref="FastColoredTextBox"/>.
-        /// </returns>
         public FastColoredTextBox CreateEditor(string filePath = "")
         {
             var fctb = new FastColoredTextBox
@@ -711,44 +634,17 @@
             return fctb;
         }
 
-        /// <summary>
-        /// The get active editor.
-        /// </summary>
-        /// <returns>
-        /// The <see cref="FastColoredTextBox"/>.
-        /// </returns>
         public FastColoredTextBox GetActiveEditor()
         {
             return this.MainTabControl.SelectedTab.Controls[0] as FastColoredTextBox;
         }
 
-        /// <summary>
-        /// The get editor by tab.
-        /// </summary>
-        /// <param name="tab">
-        /// The tab.
-        /// </param>
-        /// <returns>
-        /// The <see cref="FastColoredTextBox"/>.
-        /// </returns>
         public FastColoredTextBox GetEditorByTab(TabPage tab)
         {
             var tabIndex = this.MainTabControl.TabPages.IndexOf(tab);
             return this.MainTabControl.SelectedTab.Controls[tabIndex] as FastColoredTextBox;
         }
 
-        /// <summary>
-        /// The sqf highlight.
-        /// </summary>
-        /// <param name="editor">
-        /// The editor.
-        /// </param>
-        /// <param name="e">
-        /// The e.
-        /// </param>
-        /// <param name="forceRefresh">
-        /// The force refresh.
-        /// </param>
         public void SqfHighlight(FastColoredTextBox editor, TextChangedEventArgs e, bool forceRefresh = false)
         {
             editor.LeftBracket = '(';
@@ -823,18 +719,6 @@
             range.SetStyle(this.boldStyle, @"\w", RegexOptions.Singleline);
         }
 
-        /// <summary>
-        /// The perform syntax highlighting.
-        /// </summary>
-        /// <param name="e">
-        /// The e.
-        /// </param>
-        /// <param name="lang">
-        /// The lang.
-        /// </param>
-        /// <param name="forceRefresh">
-        /// The force refresh.
-        /// </param>
         public void PerformSyntaxHighlighting(TextChangedEventArgs e, string lang, bool forceRefresh = false)
         {
             switch (lang)
@@ -856,12 +740,6 @@
             }
         }
 
-        /// <summary>
-        /// The create arma sense.
-        /// </summary>
-        /// <returns>
-        /// The <see cref="AutocompleteMenu"/>.
-        /// </returns>
         public AutocompleteMenu CreateArmaSense()
         {
             var editor = this.MainTabControl.SelectedTab.Controls[0] as FastColoredTextBox;
@@ -887,15 +765,6 @@
             return this.ArmaSense;
         }
 
-        /// <summary>
-        /// The build autocomplete menu.
-        /// </summary>
-        /// <param name="armaSense">
-        /// The arma sense.
-        /// </param>
-        /// <param name="forceUpdate">
-        /// The force update.
-        /// </param>
         public void BuildAutocompleteMenu(AutocompleteMenu armaSense, bool forceUpdate = false)
         {
             // Break out if the number of items hasn't changed -> might cause problems if 1 item is removed, then 1 added
@@ -957,30 +826,12 @@
             this.ArmaListItemsCount = items.Count;
         }
 
-        /// <summary>
-        /// The update user variables.
-        /// </summary>
-        /// <param name="loadUserVarsBwDoWork">
-        /// The load user vars bw do work.
-        /// </param>
-        /// <param name="loadUserVarsBwRunWorkerCompleted">
-        /// The load user vars bw run worker completed.
-        /// </param>
         public void UpdateUserVariables(
             DoWorkEventArgs loadUserVarsBwDoWork, 
             RunWorkerCompletedEventArgs loadUserVarsBwRunWorkerCompleted)
         {
         }
 
-        /// <summary>
-        /// The get var type from string.
-        /// </summary>
-        /// <param name="varContents">
-        /// The var contents.
-        /// </param>
-        /// <returns>
-        /// The <see cref="string"/>.
-        /// </returns>
         public string GetVarTypeFromString(string varContents)
         {
             if ((varContents.StartsWith("\"") && varContents.EndsWith("\"")) || varContents.StartsWith("str")
@@ -1065,31 +916,13 @@
 
         #region Code Snippets -- not currently used
 
-        /// <summary>
-        ///     This item appears when any part of snippet text is typed
-        /// </summary>
         private class DeclarationSnippet : SnippetAutocompleteItem
         {
-            /// <summary>
-            /// Initialises a new instance of the <see cref="DeclarationSnippet"/> class.
-            /// </summary>
-            /// <param name="snippet">
-            /// The snippet.
-            /// </param>
             public DeclarationSnippet(string snippet)
                 : base(snippet)
             {
             }
 
-            /// <summary>
-            /// The compare.
-            /// </summary>
-            /// <param name="fragmentText">
-            /// The fragment text.
-            /// </param>
-            /// <returns>
-            /// The <see cref="CompareResult"/>.
-            /// </returns>
             public override CompareResult Compare(string fragmentText)
             {
                 var pattern = Regex.Escape(fragmentText);
@@ -1103,39 +936,24 @@
         }
 
         /// <summary>
-        ///     Divides numbers and words: "123AND456" -> "123 AND 456"
-        ///     Or "i=2" -> "i = 2"
+        /// Divides numbers and words: "123AND456" -> "123 AND 456"
+        /// Or "i=2" -> "i = 2"
         /// </summary>
         private class InsertSpaceSnippet : AutocompleteItem
         {
-            /// <summary>
-            /// The pattern.
-            /// </summary>
             private readonly string pattern;
 
-            /// <summary>
-            /// Initialises a new instance of the <see cref="InsertSpaceSnippet"/> class.
-            /// </summary>
-            /// <param name="pattern">
-            /// The pattern.
-            /// </param>
             public InsertSpaceSnippet(string pattern)
                 : base(string.Empty)
             {
                 this.pattern = pattern;
             }
 
-            /// <summary>
-            /// Initialises a new instance of the <see cref="InsertSpaceSnippet"/> class.
-            /// </summary>
             public InsertSpaceSnippet()
                 : this(@"^(\d+)([a-zA-Z_]+)(\d*)$")
             {
             }
 
-            /// <summary>
-            /// Gets the tool tip title.
-            /// </summary>
             public override string ToolTipTitle
             {
                 get
@@ -1144,15 +962,6 @@
                 }
             }
 
-            /// <summary>
-            /// The compare.
-            /// </summary>
-            /// <param name="fragmentText">
-            /// The fragment text.
-            /// </param>
-            /// <returns>
-            /// The <see cref="CompareResult"/>.
-            /// </returns>
             public override CompareResult Compare(string fragmentText)
             {
                 if (Regex.IsMatch(fragmentText, this.pattern))
@@ -1167,16 +976,7 @@
                 return CompareResult.Hidden;
             }
 
-            /// <summary>
-            /// The insert spaces.
-            /// </summary>
-            /// <param name="fragment">
-            /// The fragment.
-            /// </param>
-            /// <returns>
-            /// The <see cref="string"/>.
-            /// </returns>
-            public string InsertSpaces(string fragment)
+            private string InsertSpaces(string fragment)
             {
                 var m = Regex.Match(fragment, this.pattern);
                 if (m == null)
@@ -1194,26 +994,17 @@
         }
 
         /// <summary>
-        ///     Inerts line break after '}'
+        ///  Inerts line break after '}'
         /// </summary>
         private class InsertEnterSnippet : AutocompleteItem
         {
-            /// <summary>
-            /// The enter place.
-            /// </summary>
             private Place enterPlace = Place.Empty;
 
-            /// <summary>
-            /// Initialises a new instance of the <see cref="InsertEnterSnippet"/> class.
-            /// </summary>
             public InsertEnterSnippet()
                 : base("[Line break]")
             {
             }
 
-            /// <summary>
-            /// Gets the tool tip title.
-            /// </summary>
             public override string ToolTipTitle
             {
                 get
@@ -1222,15 +1013,6 @@
                 }
             }
 
-            /// <summary>
-            /// The compare.
-            /// </summary>
-            /// <param name="fragmentText">
-            /// The fragment text.
-            /// </param>
-            /// <returns>
-            /// The <see cref="CompareResult"/>.
-            /// </returns>
             public override CompareResult Compare(string fragmentText)
             {
                 var r = this.Parent.Fragment.Clone();
@@ -1248,12 +1030,6 @@
                 return CompareResult.Hidden;
             }
 
-            /// <summary>
-            /// The get text for replace.
-            /// </summary>
-            /// <returns>
-            /// The <see cref="string"/>.
-            /// </returns>
             public override string GetTextForReplace()
             {
                 // extend range
@@ -1266,15 +1042,6 @@
                 return Environment.NewLine + r.Text;
             }
 
-            /// <summary>
-            /// The on selected.
-            /// </summary>
-            /// <param name="popupMenu">
-            /// The popup menu.
-            /// </param>
-            /// <param name="e">
-            /// The e.
-            /// </param>
             public override void OnSelected(AutocompleteMenu popupMenu, SelectedEventArgs e)
             {
                 base.OnSelected(popupMenu, e);

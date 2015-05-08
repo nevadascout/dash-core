@@ -1,4 +1,10 @@
-﻿namespace Dash
+﻿// --------------------------------------------------------------------------------------------------------------------
+// <copyright file="Main.cs" company="">
+//   
+// </copyright>
+// --------------------------------------------------------------------------------------------------------------------
+
+namespace Dash
 {
     using System;
     using System.Collections.Generic;
@@ -7,6 +13,7 @@
     using System.Drawing;
     using System.IO;
     using System.Linq;
+    using System.Net;
     using System.Text.RegularExpressions;
     using System.Windows.Forms;
 
@@ -38,6 +45,17 @@
         /// The watcher.
         /// </summary>
         private FileSystemWatcher watcher = new FileSystemWatcher();
+
+        // TODO -- Move all of these into app.config file
+        private readonly double version = 1.5; // App version 
+
+        // TODO -- Change this to the nevadascout domain
+        private readonly string site = "http://pastebin.com/raw.php?i=kEfPgtGQ";
+
+        // TODO -- Remove this when reworked to use ClickOnce library
+        private readonly string downloadFileLocation = "https://mega.co.nz/#!uJ9FXA7L!v7mKjV5DTKs5dp7lRfvNkwBP2NZJjqT681nIHlKWs7w";
+
+        // Updater vars ~ trdwll
 
         /// <summary>
         /// Initialises a new instance of the <see cref="Main"/> class.
@@ -833,16 +851,19 @@
         /// </param>
         private void saveToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            if (isTabAlive())
+            if (this.IsTabAlive())
             {
                 var editor = this.DashGlobal.EditorHelper.GetActiveEditor();
 
                 var filePath = editor.Tag.ToString();
-                var contents = editor.Text;
+                var fileContents = editor.Text;
 
                 if (filePath == string.Empty)
                 {
-                    var sfd = new SaveFileDialog { Filter = "SQF File|*.sqf|C++ File|*.cpp|SQM File|*.sqm|All Files|*.*" };
+                    var sfd = new SaveFileDialog
+                                  {
+                                      Filter = "SQF File|*.sqf|C++ File|*.cpp|SQM File|*.sqm|All Files|*.*"
+                                  };
 
                     if (sfd.ShowDialog() == DialogResult.OK)
                     {
@@ -852,11 +873,14 @@
                 }
                 else
                 {
-                    File.WriteAllText(filePath, contents);
+                    File.WriteAllText(filePath, fileContents);
                     this.DashGlobal.TabsHelper.SetSelectedTabClean();
                 }
             }
-            else MessageBox.Show("Failed to save file!", "Failed", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            else
+            {
+                MessageBox.Show("Failed to save file!", "Failed", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
         }
 
         /// <summary>
@@ -892,7 +916,7 @@
         /// </param>
         private void saveAsToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            if (isTabAlive())
+            if (this.IsTabAlive())
             {
                 var sfd = new SaveFileDialog { Filter = "SQF File|*.sqf|C++ File|*.cpp|SQM File|*.sqm|All Files|*.*" };
 
@@ -907,7 +931,10 @@
                     this.DashGlobal.TabsHelper.CreateTabOpenFile(sfd.FileName);
                 }
             }
-            else MessageBox.Show("Failed to save file!", "Failed", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            else
+            {
+                MessageBox.Show("Failed to save file!", "Failed", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
         }
 
         /// <summary>
@@ -1253,42 +1280,37 @@
 
         private void closeAllTabsToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            // Close all tabs ~ trdwll
-            mainTabControl.TabPages.Clear();
+            // Disabled as this doesn't do any file "dirty" status checking before closing tabs
+            this.mainTabControl.TabPages.Clear();
         }
 
         private void closeProjectToolStripMenuItem_Click(object sender, EventArgs e)
         {
             // Simple method of clearing project ~ trdwll
-            directoryTreeView.Nodes.Clear();
+            this.directoryTreeView.Nodes.Clear();
             Settings.Default.TreeviewDir = null;
             Settings.Default.Save();
         }
 
         /// <summary>
-        /// Check if <= 0 tabs are active
-        /// 
-        /// ~ trdwll
+        /// Check if zero or more tabs are active
         /// </summary>
         /// <returns>Returns true or false</returns>
-        private bool isTabAlive()
+        private bool IsTabAlive()
         {
-            if (mainTabControl.TabCount <= 0) return false;
-            else return true;
+            if (this.mainTabControl.TabCount <= 0)
+            {
+                return false;
+            }
+
+            return true;
         }
 
         private void checkForUpdatesToolStripMenuItem_Click(object sender, EventArgs e)
         {
             // Check for updates ~ trdwll
-            checkForUpdate(true);
+            this.CheckForUpdate(true);
         }
-
-        // Updater vars ~ trdwll
-        // Set all of these globally in the config file
-        double version = 1.5; // App version 
-        string site = "http://pastebin.com/raw.php?i=kEfPgtGQ"; // URL to check version
-        string downloadFileLocation = "https://mega.co.nz/#!uJ9FXA7L!v7mKjV5DTKs5dp7lRfvNkwBP2NZJjqT681nIHlKWs7w"; // Download new update (host staticly on the http://dash.nevadascout.com/ domain)
-        // Updater vars ~ trdwll
 
         /// <summary>
         /// Check for updates
@@ -1298,36 +1320,57 @@
         /// 
         /// ~ trdwll
         /// </summary>
-        /// <param name="bShowNotification">boolean - if you want to display a notification in the taskbar (over on the right) ps, I can't remember the name of it lol</param>
-        private void checkForUpdate(bool bShowNotification = false)
+        /// <param name="showNotification">
+        /// True if you want to display a notification in the notification area
+        /// </param>
+        private void CheckForUpdate(bool showNotification = false)
         {
             try
             {
-                System.Net.WebClient client = new System.Net.WebClient();
-                Stream stream = client.OpenRead(site);
-                StreamReader reader = new StreamReader(stream);
+                var client = new WebClient();
+                var stream = client.OpenRead(this.site);
 
-                double webVersion = Convert.ToDouble(reader.ReadToEnd());
-
-                if (webVersion > version)
+                if (stream != null)
                 {
-                    if (bShowNotification)
+                    var reader = new StreamReader(stream);
+                    var webVersion = Convert.ToDouble(reader.ReadToEnd());
+
+                    if (webVersion > this.version)
                     {
-                        string icoPath = Application.StartupPath + @"\dash-code.ico";
-                        if (File.Exists(icoPath)) updateIcon.Icon = new System.Drawing.Icon(icoPath);
-                        else updateIcon.Icon = SystemIcons.Information;
+                        if (showNotification)
+                        {
+                            var icoPath = Application.StartupPath + @"\dash-code.ico";
 
-                        updateIcon.BalloonTipText = "Dash Update " + webVersion.ToString() + " Available!";
-                        updateIcon.BalloonTipTitle = "Dash";
-                        updateIcon.ShowBalloonTip(3000);
+                            if (File.Exists(icoPath))
+                            {
+                                this.updateIcon.Icon = new Icon(icoPath);
+                            }
+                            else
+                            {
+                                this.updateIcon.Icon = SystemIcons.Information;
+                            }
+
+                            this.updateIcon.BalloonTipText = "Dash Update " + webVersion + " Available!";
+                            this.updateIcon.BalloonTipTitle = "Dash";
+                            this.updateIcon.ShowBalloonTip(3000);
+                        }
+
+                        var dialogResult = MessageBox.Show("Would you like to download the newest update?", "Update " + webVersion + " Available", MessageBoxButtons.YesNo);
+
+                        if (dialogResult == DialogResult.Yes)
+                        {
+                            Process.Start(this.downloadFileLocation);
+                        }
                     }
-                    DialogResult dialogResult = MessageBox.Show("Would you like to download the newest update?", "Update " + webVersion.ToString() + " Available", MessageBoxButtons.YesNo);
-                    if (dialogResult == DialogResult.Yes) System.Diagnostics.Process.Start(downloadFileLocation);
-                }
-                else MessageBox.Show("You are running: " + version.ToString() + "\nThis is the current version.");
+                    else
+                    {
+                        MessageBox.Show("You are running: " + this.version + "\nThis is the current version.");
+                    }
 
-                stream.Close();
-                stream.Dispose();
+                    stream.Close();
+                    stream.Dispose();
+                }
+
                 client.Dispose();
             }
             catch
@@ -1337,14 +1380,14 @@
         }
 
         #region Drag & Drop
-        // ~ trdwll
 
+        // ~ trdwll
         private void directoryTreeView_DragDrop(object sender, DragEventArgs e)
         {
-            foreach (string files in (string[])e.Data.GetData(DataFormats.FileDrop))
+            foreach (var filePath in (string[])e.Data.GetData(DataFormats.FileDrop))
             {
-                DashGlobal.FilesHelper.SetTreeviewDirectory(directoryTreeView, files);
-                Settings.Default.TreeviewDir = files;
+                this.DashGlobal.FilesHelper.SetTreeviewDirectory(this.directoryTreeView, filePath);
+                Settings.Default.TreeviewDir = filePath;
                 Settings.Default.Save();
             }
         }
@@ -1354,9 +1397,8 @@
             e.Effect = DragDropEffects.All;
         }
 
-         #endregion Drag & Drop
+        #endregion Drag & Drop
     }
-
 
     /// <summary>
     /// The user variable.

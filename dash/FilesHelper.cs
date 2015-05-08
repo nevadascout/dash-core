@@ -5,36 +5,15 @@
 
     using Dash.Properties;
 
-    /// <summary>
-    /// The files helper.
-    /// </summary>
     public class FilesHelper
     {
-        /// <summary>
-        /// Initialises a new instance of the <see cref="FilesHelper"/> class.
-        /// </summary>
-        /// <param name="dashGlobal">
-        /// The dash global.
-        /// </param>
         public FilesHelper(DashGlobal dashGlobal)
         {
             this.DashGlobal = dashGlobal;
         }
 
-        /// <summary>
-        /// Gets or sets the dash global.
-        /// </summary>
         public DashGlobal DashGlobal { get; set; }
 
-        /// <summary>
-        /// The set treeview directory.
-        /// </summary>
-        /// <param name="treeView">
-        /// The tree view.
-        /// </param>
-        /// <param name="path">
-        /// The path.
-        /// </param>
         public void SetTreeviewDirectory(TreeView treeView, string path)
         {
             treeView.Nodes.Clear();
@@ -67,15 +46,12 @@
             }
         }
 
-        /// <summary>
-        /// The create directory node.
-        /// </summary>
-        /// <param name="directoryInfo">
-        /// The directory info.
-        /// </param>
-        /// <returns>
-        /// The <see cref="TreeNode"/>.
-        /// </returns>
+        public string GetLangFromFile(string file)
+        {
+            var parts = file.Split('.');
+            return parts[parts.Length - 1];
+        }
+
         private TreeNode CreateDirectoryNode(DirectoryInfo directoryInfo)
         {
             var directoryNode = new TreeNode(directoryInfo.Name, 0, 0)
@@ -145,21 +121,6 @@
             }
 
             return directoryNode;
-        }
-
-        /// <summary>
-        /// The get lang from file.
-        /// </summary>
-        /// <param name="file">
-        /// The file.
-        /// </param>
-        /// <returns>
-        /// The <see cref="string"/>.
-        /// </returns>
-        public string GetLangFromFile(string file)
-        {
-            var parts = file.Split('.');
-            return parts[parts.Length - 1];
         }
     }
 }

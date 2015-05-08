@@ -6,26 +6,8 @@
 
     using FastColoredTextBoxNS;
 
-    /// <summary>
-    /// The tabs helper.
-    /// </summary>
     public class TabsHelper
     {
-        /// <summary>
-        /// Initialises a new instance of the <see cref="TabsHelper"/> class.
-        /// </summary>
-        /// <param name="textAreaTextChanged">
-        /// The text area text changed.
-        /// </param>
-        /// <param name="textAreaSelectionChangedDelayed">
-        /// The text area selection changed delayed.
-        /// </param>
-        /// <param name="mainTabControl">
-        /// The main tab control.
-        /// </param>
-        /// <param name="dashGlobal">
-        /// The dash global.
-        /// </param>
         public TabsHelper(
             EventHandler<TextChangedEventArgs> textAreaTextChanged, 
             EventHandler textAreaSelectionChangedDelayed, 
@@ -38,35 +20,14 @@
             this.DashGlobal = dashGlobal;
         }
 
-        /// <summary>
-        /// Gets or sets the main tab control.
-        /// </summary>
         public TabControl MainTabControl { get; set; }
 
-        /// <summary>
-        /// Gets or sets the dash global.
-        /// </summary>
         public DashGlobal DashGlobal { get; set; }
 
-        /// <summary>
-        /// Gets or sets the text area text changed.
-        /// </summary>
         private EventHandler<TextChangedEventArgs> TextAreaTextChanged { get; set; }
 
-        /// <summary>
-        /// Gets or sets the text area selection changed delayed.
-        /// </summary>
         private EventHandler TextAreaSelectionChangedDelayed { get; set; }
 
-        /// <summary>
-        /// The create blank tab.
-        /// </summary>
-        /// <param name="fileType">
-        /// The file type.
-        /// </param>
-        /// <param name="filename">
-        /// The filename.
-        /// </param>
         public void CreateBlankTab(FileType fileType = FileType.Sqf, string filename = "New File")
         {
             var cleanName = filename + this.MainTabControl.TabPages.Count;
@@ -79,12 +40,6 @@
             this.MainTabControl.SelectTab(cleanName);
         }
 
-        /// <summary>
-        /// The create tab open file.
-        /// </summary>
-        /// <param name="fileToOpen">
-        /// The file to open.
-        /// </param>
         public void CreateTabOpenFile(string fileToOpen)
         {
             var fileParts = fileToOpen.Split('\\');
@@ -105,12 +60,6 @@
             this.DashGlobal.EditorHelper.PerformSyntaxHighlighting(null, Main.Lang, true);
         }
 
-        /// <summary>
-        /// The close tab.
-        /// </summary>
-        /// <param name="tab">
-        /// The tab.
-        /// </param>
         public void CloseTab(TabPage tab)
         {
             var tabCount = this.MainTabControl.TabPages.Count;
@@ -181,12 +130,6 @@
             this.DashGlobal.EditorHelper.ActiveEditor.Focus();
         }
 
-        /// <summary>
-        /// The close all tabs except.
-        /// </summary>
-        /// <param name="tab">
-        /// The tab.
-        /// </param>
         public void CloseAllTabsExcept(TabPage tab)
         {
             foreach (TabPage tabPage in this.MainTabControl.TabPages)
@@ -198,32 +141,11 @@
             }
         }
 
-        /// <summary>
-        /// The get tab by filename.
-        /// </summary>
-        /// <param name="mainTabControl">
-        /// The main tab control.
-        /// </param>
-        /// <param name="filename">
-        /// The filename.
-        /// </param>
-        /// <returns>
-        /// The <see cref="TabPage"/>.
-        /// </returns>
         public TabPage GetTabByFilename(TabControl mainTabControl, string filename)
         {
             return mainTabControl.TabPages.Cast<TabPage>().FirstOrDefault(tab => tab.Name == filename);
         }
 
-        /// <summary>
-        /// The get clicked tab.
-        /// </summary>
-        /// <param name="e">
-        /// The e.
-        /// </param>
-        /// <returns>
-        /// The <see cref="TabPage"/>.
-        /// </returns>
         public TabPage GetClickedTab(MouseEventArgs e)
         {
             TabPage page = null;
@@ -243,9 +165,6 @@
             return page;
         }
 
-        /// <summary>
-        /// The set selected tab dirty.
-        /// </summary>
         public void SetSelectedTabDirty()
         {
             var info = this.MainTabControl.SelectedTab.Tag as FileInfo;
@@ -253,9 +172,6 @@
             this.MainTabControl.SelectedTab.Tag = info;
         }
 
-        /// <summary>
-        /// The set selected tab clean.
-        /// </summary>
         public void SetSelectedTabClean()
         {
             var info = this.MainTabControl.SelectedTab.Tag as FileInfo;
@@ -263,28 +179,16 @@
             this.MainTabControl.SelectedTab.Tag = info;
         }
 
-        /// <summary>
-        /// The check tab dirty state.
-        /// </summary>
         public void CheckTabDirtyState()
         {
             // TODO -- Add CRC hash checking in here
         }
     }
 
-    /// <summary>
-    /// The file info.
-    /// </summary>
     public class FileInfo
     {
-        /// <summary>
-        /// Gets or sets a value indicating whether dirty.
-        /// </summary>
         public bool Dirty { get; set; }
 
-        /// <summary>
-        /// Gets or sets the crc hash.
-        /// </summary>
         public string CrcHash { get; set; }
     }
 }
