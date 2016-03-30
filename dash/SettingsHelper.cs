@@ -1,8 +1,9 @@
-﻿using System.Windows.Forms;
-using Dash.Properties;
-
-namespace Dash
+﻿namespace Dash
 {
+    using System.Windows.Forms;
+
+    using Dash.Properties;
+
     public class SettingsHelper
     {
         public TabControl MainTabControl { get; set; }
@@ -16,7 +17,7 @@ namespace Dash
             }
 
             // Save open tabs to settings so we can load them again when we reopen the app
-            foreach (TabPage tab in MainTabControl.TabPages)
+            foreach (TabPage tab in this.MainTabControl.TabPages)
             {
                 // Ensure the tab has been saved somewhere
                 if (!string.IsNullOrEmpty(tab.Name) && tab.Name.Contains("\\"))

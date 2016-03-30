@@ -1,55 +1,61 @@
-﻿using System;
-using System.Windows.Forms;
-using Dash.Properties;
-using FastColoredTextBoxNS;
-
-namespace Dash
+﻿namespace Dash
 {
-    public class DashGlobal
-    {
-        public EditorHelper EditorHelper { get; private set; }
-        public FilesHelper FilesHelper { get; set; }
-        public SettingsHelper SettingsHelper { get; set; }
-        public TabsHelper TabsHelper { get; set; }
-        public Main MainWindow { get; set; }
+    using System;
+    using System.Windows.Forms;
 
+    using Dash.Properties;
+
+    using FastColoredTextBoxNS;
+
+    public class DashGlobal
+    {       
         public DashGlobal(
-            EventHandler<TextChangedEventArgs> textAreaTextChanged,
-            EventHandler<TextChangedEventArgs> textAreaTextChangedDelayed,
-            KeyEventHandler textAreaKeyUp,
-            EventHandler textAreaSelectionChangedDelayed,
-            DragEventHandler textAreaDragDrop,
-            DragEventHandler textAreaDragEnter,
-            TabControl mainTabControl,
-            AutocompleteMenu armaSense,
+            EventHandler<TextChangedEventArgs> textAreaTextChanged, 
+            EventHandler<TextChangedEventArgs> textAreaTextChangedDelayed, 
+            KeyEventHandler textAreaKeyUp, 
+            EventHandler textAreaSelectionChangedDelayed, 
+            DragEventHandler textAreaDragDrop, 
+            DragEventHandler textAreaDragEnter, 
+            TabControl mainTabControl, 
+            AutocompleteMenu armaSense, 
             Main mainWindow)
         {
-            EditorHelper = new EditorHelper(
-                textAreaTextChanged,
-                textAreaTextChangedDelayed,
-                textAreaKeyUp,
-                textAreaSelectionChangedDelayed,
-                textAreaDragDrop,
-                textAreaDragEnter,
-                mainTabControl,
-                armaSense,
+            this.EditorHelper = new EditorHelper(
+                textAreaTextChanged, 
+                textAreaTextChangedDelayed, 
+                textAreaKeyUp, 
+                textAreaSelectionChangedDelayed, 
+                textAreaDragDrop, 
+                textAreaDragEnter, 
+                mainTabControl, 
+                armaSense, 
                 this);
 
-            TabsHelper = new TabsHelper(
-                textAreaTextChanged,
-                textAreaSelectionChangedDelayed,
-                mainTabControl,
+            this.TabsHelper = new TabsHelper(
+                textAreaTextChanged, 
+                textAreaSelectionChangedDelayed, 
+                mainTabControl, 
                 this);
 
-            FilesHelper = new FilesHelper(this);
-            SettingsHelper = new SettingsHelper();
+            this.FilesHelper = new FilesHelper(this);
+            this.SettingsHelper = new SettingsHelper();
 
-            MainWindow = mainWindow;
+            this.MainWindow = mainWindow;
         }
+
+        public EditorHelper EditorHelper { get; private set; }
+
+        public FilesHelper FilesHelper { get; set; }
+
+        public SettingsHelper SettingsHelper { get; set; }
+
+        public TabsHelper TabsHelper { get; set; }
+
+        public Main MainWindow { get; set; }
 
         public void SetWindowTitle(string titleText)
         {
-            MainWindow.Text = titleText + " - " + Settings.Default.AppName;
+            this.MainWindow.Text = titleText + " - " + Settings.Default.AppName;
         }
     }
 }
