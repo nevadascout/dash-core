@@ -5,8 +5,6 @@ VisualStudioVersion = 12.0.31101.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Dash", "Dash.csproj", "{46FEDF07-C2E1-49C9-92D5-AF94B783B18E}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HtmlProcessor", "..\HtmlProcessor\HtmlProcessor.csproj", "{459F4154-5679-491F-9EAE-412F7E3823D4}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FastColoredTextBox", "..\FastColoredTextBox\FastColoredTextBox.csproj", "{6DD14A85-CCFC-4774-BD26-0F5772512319}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "App", "App", "{54928AB1-C9C6-4140-9692-787FF0F45D51}"
@@ -16,6 +14,8 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{E700CBE7-3459-447D-96DA-FD4E035D1F13}"
 	ProjectSection(SolutionItems) = preProject
 		readme.md = readme.md
+		..\Settings.StyleCop = ..\Settings.StyleCop
+		..\Todo.txt = ..\Todo.txt
 	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Dash.Installer", "..\Dash.Installer\Dash.Installer.csproj", "{61306318-68C9-4A9B-9701-95420E0FA830}"
@@ -39,14 +39,6 @@ Global
 		{46FEDF07-C2E1-49C9-92D5-AF94B783B18E}.Release|Any CPU.Build.0 = Release_64|Any CPU
 		{46FEDF07-C2E1-49C9-92D5-AF94B783B18E}.ReleaseLITE|Any CPU.ActiveCfg = Release_64|Any CPU
 		{46FEDF07-C2E1-49C9-92D5-AF94B783B18E}.ReleaseLITE|Any CPU.Build.0 = Release_64|Any CPU
-		{459F4154-5679-491F-9EAE-412F7E3823D4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{459F4154-5679-491F-9EAE-412F7E3823D4}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{459F4154-5679-491F-9EAE-412F7E3823D4}.Release_32|Any CPU.ActiveCfg = Release_32|Any CPU
-		{459F4154-5679-491F-9EAE-412F7E3823D4}.Release_64|Any CPU.ActiveCfg = Release_64|Any CPU
-		{459F4154-5679-491F-9EAE-412F7E3823D4}.Release|Any CPU.ActiveCfg = Release_64|Any CPU
-		{459F4154-5679-491F-9EAE-412F7E3823D4}.Release|Any CPU.Build.0 = Release_64|Any CPU
-		{459F4154-5679-491F-9EAE-412F7E3823D4}.ReleaseLITE|Any CPU.ActiveCfg = Release_64|Any CPU
-		{459F4154-5679-491F-9EAE-412F7E3823D4}.ReleaseLITE|Any CPU.Build.0 = Release_64|Any CPU
 		{6DD14A85-CCFC-4774-BD26-0F5772512319}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{6DD14A85-CCFC-4774-BD26-0F5772512319}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{6DD14A85-CCFC-4774-BD26-0F5772512319}.Release_32|Any CPU.ActiveCfg = Release|Any CPU

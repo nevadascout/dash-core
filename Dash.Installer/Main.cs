@@ -1,119 +1,206 @@
-﻿using System;
-using System.ComponentModel;
-using System.Diagnostics;
-using System.Drawing;
-using System.IO;
-using System.IO.Compression;
-using System.Net;
-using System.Windows.Forms;
-using IWshRuntimeLibrary;
-using File = System.IO.File;
-
-namespace Dash.Installer
+﻿namespace Dash.Installer
 {
+    using System;
+    using System.ComponentModel;
+    using System.Diagnostics;
+    using System.Diagnostics.CodeAnalysis;
+    using System.Drawing;
+    using System.IO;
+    using System.IO.Compression;
+    using System.Net;
+    using System.Windows.Forms;
+
+    using IWshRuntimeLibrary;
+
+    using File = System.IO.File;
+
+    /// <summary>
+    /// The main.
+    /// </summary>
     public partial class Main : Form
     {
-        public bool Installing { get; set; }
-        public bool InstallDone { get; set; }
-
+        /// <summary>
+        /// The dash zip name.
+        /// </summary>
         private const string DashZipName = "dash_v1.2.zip";
+
+        /// <summary>
+        /// The temp dir.
+        /// </summary>
         private const string TempDir = @"C:\temp\";
 
+        /// <summary>
+        /// Initialises a new instance of the <see cref="Main"/> class.
+        /// </summary>
         public Main()
         {
-            InitializeComponent();
+            this.InitializeComponent();
             this.Installing = false;
             this.InstallDone = false;
         }
 
+        /// <summary>
+        /// Gets or sets a value indicating whether installing.
+        /// </summary>
+        public bool Installing { get; set; }
+
+        /// <summary>
+        /// Gets or sets a value indicating whether install done.
+        /// </summary>
+        public bool InstallDone { get; set; }
+
+        /// <summary>
+        /// The main_ load.
+        /// </summary>
+        /// <param name="sender">
+        /// The sender.
+        /// </param>
+        /// <param name="e">
+        /// The e.
+        /// </param>
         private void Main_Load(object sender, EventArgs e)
         {
-            pnlLoading.Hide();
+            this.pnlLoading.Hide();
         }
 
+        /// <summary>
+        /// The btn cancel_ click.
+        /// </summary>
+        /// <param name="sender">
+        /// The sender.
+        /// </param>
+        /// <param name="e">
+        /// The e.
+        /// </param>
         private void btnCancel_Click(object sender, EventArgs e)
         {
             if (this.Installing)
             {
                 // Cancel download
-                pnlLoading.Hide();
-                btnInstall.Enabled = true;
+                this.pnlLoading.Hide();
+                this.btnInstall.Enabled = true;
                 this.Installing = false;
             }
             else
             {
                 this.Close();
             }
-
         }
 
+        /// <summary>
+        /// The lnk nevada scout_ link clicked.
+        /// </summary>
+        /// <param name="sender">
+        /// The sender.
+        /// </param>
+        /// <param name="e">
+        /// The e.
+        /// </param>
         private void lnkNevadaScout_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
             Process.Start("http://nevadascout.com");
         }
 
+        /// <summary>
+        /// The lnk pavel torgashov_ link clicked.
+        /// </summary>
+        /// <param name="sender">
+        /// The sender.
+        /// </param>
+        /// <param name="e">
+        /// The e.
+        /// </param>
         private void lnkPavelTorgashov_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
             Process.Start("https://github.com/PavelTorgashov/FastColoredTextBox");
         }
 
+        /// <summary>
+        /// The lnk yannick lung_ link clicked.
+        /// </summary>
+        /// <param name="sender">
+        /// The sender.
+        /// </param>
+        /// <param name="e">
+        /// The e.
+        /// </param>
         private void lnkYannickLung_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
             Process.Start("http://hawcons.com/");
         }
 
+        /// <summary>
+        /// The btn select folder_ click.
+        /// </summary>
+        /// <param name="sender">
+        /// The sender.
+        /// </param>
+        /// <param name="e">
+        /// The e.
+        /// </param>
         private void btnSelectFolder_Click(object sender, EventArgs e)
         {
-            var result = folderDialog.ShowDialog();
+            var result = this.folderDialog.ShowDialog();
 
             if (result == DialogResult.OK)
             {
-                this.txtPath.Text = folderDialog.SelectedPath;
+                this.txtPath.Text = this.folderDialog.SelectedPath;
             }
         }
 
+        /// <summary>
+        /// The btn install_ click.
+        /// </summary>
+        /// <param name="sender">
+        /// The sender.
+        /// </param>
+        /// <param name="e">
+        /// The e.
+        /// </param>
         private void btnInstall_Click(object sender, EventArgs e)
         {
             if (this.InstallDone)
             {
                 // Add additional backslashes if necessary
-                if (!txtPath.Text.EndsWith("\\"))
+                if (!this.txtPath.Text.EndsWith("\\"))
                 {
-                    txtPath.Text += "\\";
+                    this.txtPath.Text += "\\";
                 }
 
-                Process.Start(txtPath.Text + "dash.exe");
+                Process.Start(this.txtPath.Text + "dash.exe");
                 this.Close();
                 return;
             }
 
-            pnlLoading.Show();
-            btnInstall.Enabled = false;
-            btnCancel.Enabled = false;
+            this.pnlLoading.Show();
+            this.btnInstall.Enabled = false;
+            this.btnCancel.Enabled = false;
             this.Installing = true;
 
-            Install();
+            this.Install();
         }
 
-
+        /// <summary>
+        /// The install.
+        /// </summary>
         private void Install()
         {
-            if (!Directory.Exists(txtPath.Text))
+            if (!Directory.Exists(this.txtPath.Text))
             {
                 // Create path if it doesn't exist
-                Directory.CreateDirectory(txtPath.Text);
+                Directory.CreateDirectory(this.txtPath.Text);
             }
 
-            progress.Value = 0;
+            this.progress.Value = 0;
 
             // Download files to C:\temp
-            using (WebClient client = new WebClient())
+            using (var client = new WebClient())
             {
                 // Update progress bar + amount downloaded
-                client.DownloadProgressChanged += client_DownloadProgressChanged;
+                client.DownloadProgressChanged += this.client_DownloadProgressChanged;
 
                 // Start next step of install -> copy files
-                client.DownloadFileCompleted += client_DownloadFileCompleted;
+                client.DownloadFileCompleted += this.client_DownloadFileCompleted;
 
                 if (!Directory.Exists(TempDir))
                 {
@@ -125,40 +212,90 @@ namespace Dash.Installer
             }
         }
 
+        /// <summary>
+        /// The create shortcut.
+        /// </summary>
+        [SuppressMessage("StyleCop.CSharp.NamingRules", "SA1305:FieldNamesMustNotUseHungarianNotation", Justification = "Reviewed. Suppression is OK here.")]
+        private void CreateShortcut()
+        {
+            var app = string.Empty;
+
+            // Add additional backslashes if necessary
+            if (!this.txtPath.Text.EndsWith("\\"))
+            {
+                app += this.txtPath.Text + "\\";
+            }
+
+            app += "dash.exe";
+
+            object shDesktop = "Desktop";
+            var shell = new WshShell();
+            var shortcutAddress = (string)shell.SpecialFolders.Item(ref shDesktop) + @"\Dash SQF Editor.lnk";
+            var shortcut = (IWshShortcut)shell.CreateShortcut(shortcutAddress);
+            shortcut.Description = "Dash SQF Editor";
+            shortcut.TargetPath = app;
+            shortcut.Save();
+        }
 
         #region File Download
 
+        /// <summary>
+        /// The client_ download file completed.
+        /// </summary>
+        /// <param name="sender">
+        /// The sender.
+        /// </param>
+        /// <param name="e">
+        /// The e.
+        /// </param>
         private void client_DownloadFileCompleted(object sender, AsyncCompletedEventArgs e)
         {
-            lblStatus.Text = "Copying Files...";
+            this.lblStatus.Text = "Copying Files...";
 
             // Extract zip + copy files
-            if (!copyFilesBw.IsBusy)
+            if (!this.copyFilesBw.IsBusy)
             {
-                copyFilesBw.RunWorkerAsync();
+                this.copyFilesBw.RunWorkerAsync();
             }
         }
 
+        /// <summary>
+        /// The client_ download progress changed.
+        /// </summary>
+        /// <param name="sender">
+        /// The sender.
+        /// </param>
+        /// <param name="e">
+        /// The e.
+        /// </param>
         private void client_DownloadProgressChanged(object sender, DownloadProgressChangedEventArgs e)
         {
-            double bytesIn = double.Parse(e.BytesReceived.ToString());
-            double totalBytes = double.Parse(e.TotalBytesToReceive.ToString());
-            double percentage = bytesIn / totalBytes * 100;
+            var bytesIn = double.Parse(e.BytesReceived.ToString());
+            var totalBytes = double.Parse(e.TotalBytesToReceive.ToString());
+            var percentage = bytesIn / totalBytes * 100;
 
-            progress.Value = int.Parse(Math.Truncate(percentage).ToString());
+            this.progress.Value = int.Parse(Math.Truncate(percentage).ToString());
         }
 
         #endregion
 
-
         #region Copy Files
 
+        /// <summary>
+        /// The copy files bw_ do work.
+        /// </summary>
+        /// <param name="sender">
+        /// The sender.
+        /// </param>
+        /// <param name="e">
+        /// The e.
+        /// </param>
         private void copyFilesBw_DoWork(object sender, DoWorkEventArgs e)
         {
             try
             {
                 // Extract zip to chosen path
-                ZipFile.ExtractToDirectory(TempDir + DashZipName, txtPath.Text);
+                ZipFile.ExtractToDirectory(TempDir + DashZipName, this.txtPath.Text);
 
                 // Clean up
                 File.Delete(TempDir + DashZipName);
@@ -169,44 +306,32 @@ namespace Dash.Installer
             }
 
             // Create desktop shortcut
-            CreateShortcut();
+            this.CreateShortcut();
         }
 
+        /// <summary>
+        /// The copy files bw_ run worker completed.
+        /// </summary>
+        /// <param name="sender">
+        /// The sender.
+        /// </param>
+        /// <param name="e">
+        /// The e.
+        /// </param>
         private void copyFilesBw_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
         {
-            lblStatus.Text = "Done!";
-            progress.Value = 100;
+            this.lblStatus.Text = "Done!";
+            this.progress.Value = 100;
 
-            btnCancel.Enabled = false;
-            btnInstall.Enabled = true;
-            btnInstall.Text = "Launch Dash!";
-            btnInstall.Font = new Font(btnInstall.Font, FontStyle.Bold);
+            this.btnCancel.Enabled = false;
+            this.btnInstall.Enabled = true;
+            this.btnInstall.Text = "Launch Dash!";
+            this.btnInstall.Font = new Font(this.btnInstall.Font, FontStyle.Bold);
             this.InstallDone = true;
 
             // Run dash on close
         }
 
         #endregion
-
-        private void CreateShortcut()
-        {
-            string app = "";
-
-            // Add additional backslashes if necessary
-            if (!txtPath.Text.EndsWith("\\"))
-            {
-                app += txtPath.Text + "\\";
-            }
-
-            app += "dash.exe";
-
-            object shDesktop = (object)"Desktop";
-            WshShell shell = new WshShell();
-            string shortcutAddress = (string)shell.SpecialFolders.Item(ref shDesktop) + @"\Dash SQF Editor.lnk";
-            IWshShortcut shortcut = (IWshShortcut)shell.CreateShortcut(shortcutAddress);
-            shortcut.Description = "Dash SQF Editor";
-            shortcut.TargetPath = app;
-            shortcut.Save();
-        }
     }
 }

@@ -151,7 +151,6 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="dash-code.ico" />
-    <Content Include="Todo.txt" />
     <Content Include="tutorial.txt">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
